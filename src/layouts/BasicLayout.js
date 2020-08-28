@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { Link } from 'react-router';
+
+import MapBoxVis from '../common/MapBoxVis';
 import './BasicLayout.css';
 
 import {
@@ -60,6 +62,7 @@ class BasicLayout extends Component {
                         </Breadcrumb>
                         <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
                             Bill is a cat.
+                            <MapBoxVis />
                         </div>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>Traffic Vis System ©2019 Created by STDAL</Footer>
