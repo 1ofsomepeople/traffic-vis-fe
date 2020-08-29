@@ -13,6 +13,8 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 
+import Analysis from '../pages/Analysis';
+
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -61,8 +63,7 @@ class BasicLayout extends Component {
                             <Breadcrumb.Item>App</Breadcrumb.Item>
                         </Breadcrumb>
                         <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-                            Bill is a cat.
-                            <MapBoxVis />
+                            <Analysis/>
                         </div>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>Traffic Vis System ©2019 Created by STDAL</Footer>
