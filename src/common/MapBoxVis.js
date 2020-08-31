@@ -148,18 +148,19 @@ class MapBoxVis extends Component {
             unit: 'metric'
         }), 'bottom-right');
 
-        // 添加全屏控件
-        this.mapbox.addControl(new mapboxgl.FullscreenControl({ 
-            container: document.querySelector('mapbox_echartgl') }
-        ));
+        // // 添加全屏控件 只能显示mapbox不能显示echarts
+        // this.mapbox.addControl(new mapboxgl.FullscreenControl({ 
+        //     container: document.querySelector('mapbox_echartgl') }
+        // ));
 
 
-        // mapbox.on('load', function () {
-        //     console.log("地图加载")
-        // });
+        this.mapbox.on('load', function () {
+            console.log("地图加载")
+            window.mapboxgl = null;
+        });
 
-        // mapbox.on('mousedown', function () {
-        //     // zoomeLevel = mapbox.getZoom()
+        // this.mapbox.on('mousedown', function () {
+        //     zoomeLevel = this.mapbox.getZoom()
         //     console.log("鼠标点击开始")
         //     if (this.button_flag) {
         //         this.load_multi_data()
@@ -167,8 +168,8 @@ class MapBoxVis extends Component {
         //     }
         // });
 
-        // mapbox.on('mouseup', function () {
-        //     // zoomeLevel = mapbox.getZoom()
+        // this.mapbox.on('mouseup', function () {
+        //     zoomeLevel = this.mapbox.getZoom()
         //     console.log("鼠标点击结束")
         //     if (this.button_flag) {
         //         this.load_multi_data()
@@ -176,13 +177,13 @@ class MapBoxVis extends Component {
         //     }
         // });
 
-        // mapbox.on('zoomstart', function () {
-        //     zoomeLevel = mapbox.getZoom()
+        // this.mapbox.on('zoomstart', function () {
+        //     zoomeLevel = this.mapbox.getZoom()
         //     console.log("zoom变化开始" + zoomeLevel)
         // });
 
-        // mapbox.on('zoomend', function () {
-        //     zoomeLevel = mapbox.getZoom()
+        // this.mapbox.on('zoomend', function () {
+        //     zoomeLevel = this.mapbox.getZoom()
         //     console.log("zoom变化结束" + zoomeLevel)
 
         // });
