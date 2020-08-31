@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { Link } from 'react-router';
 
-import MapBoxVis from '../common/MapBoxVis';
 import './BasicLayout.css';
 
 import {
@@ -30,6 +29,9 @@ class BasicLayout extends Component {
         console.log(collapsed);
         this.setState({ collapsed });
     };
+
+    componentDidMount(){
+    }
 
     render() {
         return (
@@ -62,7 +64,7 @@ class BasicLayout extends Component {
                             <Breadcrumb.Item>Home</Breadcrumb.Item>
                             <Breadcrumb.Item>App</Breadcrumb.Item>
                         </Breadcrumb>
-                        <div className="site-layout-background site-layout-content">
+                        <div id="site-layout-content" className="site-layout-background site-layout-content">
                             <Analysis />
                         </div>
                     </Content>

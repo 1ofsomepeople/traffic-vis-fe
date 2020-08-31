@@ -5,25 +5,39 @@ import 'echarts-gl';
 
 import './MapBoxVis.css'
 
-window.mapboxgl = mapboxgl;
+
 class MapBoxVis extends Component {
     constructor(props) {
         super(props);
         this.state = {}
-
+        console.log(this.props.data)
         this.myChartGl = null // echarts对象实例
         this.mapbox = null // mapbox对象实例
+
+        setTimeout(() => {
+            this.showmapbox(this.props.data.data,this.props.data.datatime);
+        })
     }
 
     componentDidMount() {
-        setTimeout(() => {
-            this.showmapbox();
-        })
+        window.mapboxgl = mapboxgl;
         window.onresize = () => {
             this.myChartGl.resize()
         }
     }
-
+    componentDidUpdate(){
+        
+        let data = this.props.data.data
+        let datatime = this.props.data.datatime
+        this.myChartGl.setOption({
+            title:{
+                subtext: datatime ? datatime : '',
+            },
+            series:[{
+                data: data?data:[],
+            }]
+        })
+    }
     showmapbox = (data = [], datatime = "") => {
 
         mapboxgl.accessToken = 'pk.eyJ1IjoiaHVzdDEyIiwiYSI6ImNrM3BpbDhsYTAzbDgzY3J2OXBzdXFuNDMifQ.bDD9-o_SB4fR0UXzYLy9gg';
@@ -35,11 +49,11 @@ class MapBoxVis extends Component {
         let barSize = (2 ** (zoomeLevel - 11)) * 0.08
 
         // 模拟数据
-        data = [
-            { name: "beijing", value: [116.368608, 39.901744, 150] },
-            { name: "beijing1", value: [116.378608, 39.901744, 350] },
-            { name: "beijing2", value: [116.388608, 39.901744, 500] },
-        ]
+        // data = [
+        //     { name: "beijing", value: [116.368608, 39.901744, 150] },
+        //     { name: "beijing1", value: [116.378608, 39.901744, 350] },
+        //     { name: "beijing2", value: [116.388608, 39.901744, 500] },
+        // ]
         // var data1 = [
         //     [116.339626,39.984877,6000],
         //     [116.467312,39.957147,2000],
@@ -51,7 +65,7 @@ class MapBoxVis extends Component {
             title: {
                 text: '交通三维柱状图',
                 padding: 20,//各个方向的内边距，默认是5，可以自行设置
-                subtext: datatime ? datatime : 'datatime', //"2019-12-13 14:00", //主标题的副标题文本内容，如果需要副标题就配置这一项
+                subtext: datatime ? datatime : '', //"2019-12-13 14:00", //主标题的副标题文本内容，如果需要副标题就配置这一项
                 subtextStyle: {//副标题内容的样式
                     color: 'black',//绿色
                     fontStyle: 'normal',//主标题文字字体风格，默认normal，有italic(斜体),oblique(斜体)
@@ -105,7 +119,7 @@ class MapBoxVis extends Component {
                 maxHeight: 500,
                 // barSize: 0.1,
                 barSize: barSize,
-                data: data,
+                data: data?data:[],
                 // 图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。
                 silent: true, //设置为true 大大优化响应时间
                 // label: {show:true},
@@ -176,10 +190,7 @@ class MapBoxVis extends Component {
     };
     render() {
         return (
-            <div className="mapBoxContainer">
-                <div id="mapbox_echartgl" style={{ minHeight: "450px" }} />
-            </div>
-
+            <div id="mapbox_echartgl" className="mapBoxContainer" style={{ minHeight: "600px" }} />
         );
     }
 }
