@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Button, PageHeader, Descriptions } from 'antd';
 import MapBoxVis from '../common/MapBoxVis';
-
+import './Analysis.css'
 class Analysis extends Component {
 
     componentDidMount() {
@@ -28,8 +28,10 @@ class Analysis extends Component {
                         />
                     </Col>
                 </Row>
-                <Row align="middle">
-                    <MapBoxVis />
+                <Row gutter={[16, 16]}>
+                    <Col span={24} className="mapContainer">
+                        <MapBoxVis />
+                    </Col>
                 </Row>
             </div>
         );

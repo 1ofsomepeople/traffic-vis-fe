@@ -1,36 +1,41 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, PageHeader, Descriptions } from 'antd';
 import mapboxgl from 'mapbox-gl';
 import echarts from 'echarts';
 import 'echarts-gl';
+
+import './MapBoxVis.css'
 
 window.mapboxgl = mapboxgl;
 class MapBoxVis extends Component {
     constructor(props) {
         super(props);
         this.state = {}
+
+        this.myChartGl = null // echarts对象实例
+        this.mapbox = null // mapbox对象实例
     }
 
     componentDidMount() {
-        this.showmapbox();
+        setTimeout(() => {
+            this.showmapbox();
+        })
+        window.onresize = () => {
+            this.myChartGl.resize()
+        }
     }
 
     showmapbox = (data = [], datatime = "") => {
 
         mapboxgl.accessToken = 'pk.eyJ1IjoiaHVzdDEyIiwiYSI6ImNrM3BpbDhsYTAzbDgzY3J2OXBzdXFuNDMifQ.bDD9-o_SB4fR0UXzYLy9gg';
-        console.log(mapboxgl)
 
-        // var map = new mapboxgl.Map({
-        //     container: 'mapbox_echartgl',
-        //     style: 'mapbox://styles/mapbox/streets-v11'
-        // });
+        // echarts对象实例
         this.myChartGl = echarts.init(document.getElementById('mapbox_echartgl'));
-        console.log(this.myChartGl)
+
         let zoomeLevel = 11
         let barSize = (2 ** (zoomeLevel - 11)) * 0.08
 
         // 模拟数据
-        var data = [
+        data = [
             { name: "beijing", value: [116.368608, 39.901744, 150] },
             { name: "beijing1", value: [116.378608, 39.901744, 350] },
             { name: "beijing2", value: [116.388608, 39.901744, 500] },
@@ -77,16 +82,17 @@ class MapBoxVis extends Component {
                 max: 500,
             },
             mapbox3D: {
+                // echarts-gl中mapbox只能应用部分配置，更多的mapbox配置要使用mapbox的api
+                // Mapbox 地图样式 style
+                style: 'mapbox://styles/mapbox/outdoors-v11',
                 // Mapbox 地图中心经纬度,经纬度用数组表示
                 center: [116.368608, 39.901744],
                 // Mapbox 地图的缩放等级
                 zoom: 10,
-                // Mapbox 地图样式
-                style: 'mapbox://styles/mapbox/outdoors-v11',
                 // 视角俯视的倾斜角度,默认为0，也就是正对着地图。最大60。
-                // pitch: 60,
+                pitch: 60,
                 // Mapbox 地图的旋转角度
-                // bearing: -30,
+                bearing: -30,
             },
 
             series: [{
@@ -104,67 +110,76 @@ class MapBoxVis extends Component {
                 silent: true, //设置为true 大大优化响应时间
                 // label: {show:true},
                 // animationEasingUpdate: 200,
-            }]
+            }],
+
         });
 
+        // 获取mapbox对象实例
+        this.mapbox = this.myChartGl.getModel().getComponent('mapbox3D').getMapbox();
 
-        // 获取mapbox对象
-        let mapbox = this.myChartGl.getModel().getComponent('mapbox3D').getMapbox();
+        // 设置mapbox的zoom范围
+        this.mapbox.setMinZoom(10);
+        this.mapbox.setMaxZoom(14);
 
-        // this.nav = new mapboxgl.NavigationControl({
-        //     showZoom: true,
-        //     showCompass: true,
-        //     visualizePitch: true,
+        // 添加缩放和指南针控件
+        this.mapbox.addControl(new mapboxgl.NavigationControl({
+            showZoom: true,
+            showCompass: true,
+            visualizePitch: true,
+        }), 'top-right');
+
+        // 添加比例尺控件
+        this.mapbox.addControl(new mapboxgl.ScaleControl({
+            maxWidth: 80,
+            unit: 'metric'
+        }), 'bottom-right');
+
+        // 添加全屏控件
+        this.mapbox.addControl(new mapboxgl.FullscreenControl({ 
+            container: document.querySelector('mapbox_echartgl') }
+        ));
+
+
+        // mapbox.on('load', function () {
+        //     console.log("地图加载")
         // });
 
-        // this.FullscreenControl = new mapboxgl.FullscreenControl({
-        //     // container: document.querySelector('mapbox_echartgl')
+        // mapbox.on('mousedown', function () {
+        //     // zoomeLevel = mapbox.getZoom()
+        //     console.log("鼠标点击开始")
+        //     if (this.button_flag) {
+        //         this.load_multi_data()
+        //         console.log("停止轮播")
+        //     }
         // });
-        mapbox.addControl(this.nav, 'top-right');
 
-        mapbox.setMinZoom(10);
-        mapbox.setMaxZoom(14);
+        // mapbox.on('mouseup', function () {
+        //     // zoomeLevel = mapbox.getZoom()
+        //     console.log("鼠标点击结束")
+        //     if (this.button_flag) {
+        //         this.load_multi_data()
+        //         console.log("重启轮播")
+        //     }
+        // });
 
+        // mapbox.on('zoomstart', function () {
+        //     zoomeLevel = mapbox.getZoom()
+        //     console.log("zoom变化开始" + zoomeLevel)
+        // });
 
-        mapbox.on('load', function () {
-            console.log("地图加载")
-        });
+        // mapbox.on('zoomend', function () {
+        //     zoomeLevel = mapbox.getZoom()
+        //     console.log("zoom变化结束" + zoomeLevel)
 
-        mapbox.on('mousedown', function () {
-            // zoomeLevel = mapbox.getZoom()
-            console.log("鼠标点击开始")
-            if (this.button_flag) {
-                this.load_multi_data()
-                console.log("停止轮播")
-            }
-        });
-
-        mapbox.on('mouseup', function () {
-            // zoomeLevel = mapbox.getZoom()
-            console.log("鼠标点击结束")
-            if (this.button_flag) {
-                this.load_multi_data()
-                console.log("重启轮播")
-            }
-        });
-
-        mapbox.on('zoomstart', function () {
-            zoomeLevel = mapbox.getZoom()
-            console.log("zoom变化开始" + zoomeLevel)
-        });
-
-        mapbox.on('zoomend', function () {
-            zoomeLevel = mapbox.getZoom()
-            console.log("zoom变化结束" + zoomeLevel)
-
-        });
+        // });
 
     };
     render() {
         return (
-            <>
-                <div id="mapbox_echartgl" style={{ width: "100%", minHeight:"400px" }}></div>
-            </>
+            <div className="mapBoxContainer">
+                <div id="mapbox_echartgl" style={{ minHeight: "450px" }} />
+            </div>
+
         );
     }
 }

@@ -62,8 +62,8 @@ class BasicLayout extends Component {
                             <Breadcrumb.Item>Home</Breadcrumb.Item>
                             <Breadcrumb.Item>App</Breadcrumb.Item>
                         </Breadcrumb>
-                        <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-                            <Analysis/>
+                        <div className="site-layout-background site-layout-content">
+                            <Analysis />
                         </div>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>Traffic Vis System ©2019 Created by STDAL</Footer>
