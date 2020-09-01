@@ -15,7 +15,7 @@ class MapBoxVis extends Component {
         this.mapbox = null // mapbox对象实例
 
         setTimeout(() => {
-            this.showmapbox(this.props.data.data,this.props.data.datatime);
+            this.showmapbox(this.props.data.data, this.props.data.datatime);
         })
     }
 
@@ -25,19 +25,51 @@ class MapBoxVis extends Component {
             this.myChartGl.resize()
         }
     }
-    componentDidUpdate(){
-        
+    componentDidUpdate() {
+        console.log(this.props)
         let data = this.props.data.data
         let datatime = this.props.data.datatime
         this.myChartGl.setOption({
-            title:{
+            title: {
                 subtext: datatime ? datatime : '',
             },
-            series:[{
-                data: data?data:[],
+            series: [{
+                data: data ? data : [],
             }]
         })
+
+        let flyActionParam = this.props.flyActionParam
+
+        if (flyActionParam) {
+            this.move_fly(this.mapbox, ...flyActionParam);
+        }
     }
+
+    move_fly = (mapbox, lon, lat, zoom, pitch, bearing, duration) => {
+        mapbox.easeTo({
+            // CameraOptions
+            center: [lon, lat],
+            zoom: zoom,
+            // 视角俯视的倾斜角度,默认为0，也就是正对着地图。最大60。
+            pitch: pitch,
+            // Mapbox 地图的旋转角度
+            bearing: bearing,
+
+            // AnimationOptions
+            // 动态转换的持续时间，按毫秒计算
+            duration: duration,
+            maxDuration: duration,
+            // 该函数持续的时间在 0~1 之间， 返回一个表示状态的数字，初始状态为 0，最终状态为 1
+            easing(t) {
+                return t;
+                // return t*(2-t);
+            },
+            // If false , no animation will occur.
+            animate: true
+        });
+
+    };
+
     showmapbox = (data = [], datatime = "") => {
 
         mapboxgl.accessToken = 'pk.eyJ1IjoiaHVzdDEyIiwiYSI6ImNrM3BpbDhsYTAzbDgzY3J2OXBzdXFuNDMifQ.bDD9-o_SB4fR0UXzYLy9gg';
@@ -45,29 +77,15 @@ class MapBoxVis extends Component {
         // echarts对象实例
         this.myChartGl = echarts.init(document.getElementById('mapbox_echartgl'));
 
-        let zoomeLevel = 11
-        let barSize = (2 ** (zoomeLevel - 11)) * 0.08
-
-        // 模拟数据
-        // data = [
-        //     { name: "beijing", value: [116.368608, 39.901744, 150] },
-        //     { name: "beijing1", value: [116.378608, 39.901744, 350] },
-        //     { name: "beijing2", value: [116.388608, 39.901744, 500] },
-        // ]
-        // var data1 = [
-        //     [116.339626,39.984877,6000],
-        //     [116.467312,39.957147,2000],
-        //     [116.312587,40.059276,8000],
-        //     [116.342587,40.059276,8000],
-        //     ]
-
+        // let zoomeLevel = 11
+        // let barSize = (2 ** (zoomeLevel - 11)) * 0.08
         this.myChartGl.setOption({
             title: {
                 text: '交通三维柱状图',
                 padding: 20,//各个方向的内边距，默认是5，可以自行设置
                 subtext: datatime ? datatime : '', //"2019-12-13 14:00", //主标题的副标题文本内容，如果需要副标题就配置这一项
                 subtextStyle: {//副标题内容的样式
-                    color: 'black',//绿色
+                    color: 'black',
                     fontStyle: 'normal',//主标题文字字体风格，默认normal，有italic(斜体),oblique(斜体)
                     fontWeight: "bold",//可选normal(正常)，bold(加粗)，bolder(加粗)，lighter(变细)，100|200|300|400|500...
                     fontFamily: "san-serif",//主题文字字体，默认微软雅黑
@@ -112,18 +130,13 @@ class MapBoxVis extends Component {
             series: [{
                 type: 'bar3D',
                 coordinateSystem: 'mapbox3D',
+                data: data ? data : [],
                 shading: 'color',
-                // bevelSize: 0.3, //柱子倒角
-                // bevelSmoothness: 2, //柱子倒角的光滑/圆润度，数值越大越光滑/圆润。
-                minHeight: 1,
+                minHeight: 100,
                 maxHeight: 500,
-                // barSize: 0.1,
-                barSize: barSize,
-                data: data?data:[],
+                barSize: 0.1,
                 // 图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。
                 silent: true, //设置为true 大大优化响应时间
-                // label: {show:true},
-                // animationEasingUpdate: 200,
             }],
 
         });

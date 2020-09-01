@@ -81,10 +81,9 @@ class Analysis extends Component {
                                     type="primary" 
                                     onClick={()=>{
                                         this.setState({
-                                            flyAction:function(){
-                                                
-                                            },
+                                            flyActionParam:[116.360163,40.001514,14,60,-45,2000]
                                         })
+                                        console.log(this.state.flyActionParam)
                                     }}    
                                 >局部演示</Button>,
                                 <Button 
@@ -92,9 +91,7 @@ class Analysis extends Component {
                                     type="primary" 
                                     onClick={()=>{
                                         this.setState({
-                                            flyAction:function(){
-
-                                            },
+                                            flyActionParam:[116.420608,39.851744,11.5,60,-30,1000]
                                         })
                                     }}     
                                 >全局演示</Button>,
@@ -105,7 +102,8 @@ class Analysis extends Component {
                                             data: {
                                                 data: [],
                                                 datatime: ''
-                                            }
+                                            },
+                                            flyActionParam:[116.368608, 39.901744,10,60,-30,1000]
                                         })
                                     }}>地图重置</Button>,
                             ]}
@@ -114,7 +112,7 @@ class Analysis extends Component {
                 </Row>
                 <Row gutter={[16, 16]}>
                     <Col span={24} className="mapContainer">
-                        <MapBoxVis data={this.state.data} flyAction={this.state.flyAction}/>
+                        <MapBoxVis data={this.state.data} flyActionParam={this.state.flyActionParam}/>
                     </Col>
                 </Row>
             </div>
