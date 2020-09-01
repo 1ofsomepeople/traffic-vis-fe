@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Button, PageHeader } from 'antd';
-import MapBoxVis from '../common/MapBoxVis';
+import MapBoxVis from '../../common/MapBoxVis';
 import './Analysis.css'
 class Analysis extends Component {
     constructor(props) {
@@ -14,8 +14,12 @@ class Analysis extends Component {
                     [116.388608, 39.901744, 500],
                 ],
                 datatime: ''
+            },
+            chartsParam: {
+                titleText: "交通拥堵情况三维柱状图",
             }
         }
+
     };
 
     // 加载数据
@@ -57,16 +61,20 @@ class Analysis extends Component {
     componentDidMount() {
     };
 
+    componentWillUnmount() {
+        console.log('Analysis Destory')
+    }
+
     render() {
         return (
             <div>
-                <Row gutter={[16, 16]}>
+                <Row gutter={[16, 0]}>
                     <Col span={24}>
                         <PageHeader
                             ghost={false}
                             onBack={() => window.history.back()}
-                            title="分析页"
-                            subTitle="交通数据分析"
+                            title="交通拥堵可视化分析"
+                            // subTitle="交通拥堵"
                             extra={[
                                 <Button
                                     key="1"
@@ -76,24 +84,24 @@ class Analysis extends Component {
                                     }}>测试数据</Button>,
                                 <Button key="2" type="primary" >数据轮播</Button>,
                                 <Button key="3" type="primary" >单数据动态演示</Button>,
-                                <Button 
-                                    key="4" 
-                                    type="primary" 
-                                    onClick={()=>{
+                                <Button
+                                    key="4"
+                                    type="primary"
+                                    onClick={() => {
                                         this.setState({
-                                            flyActionParam:[116.360163,40.001514,14,60,-45,2000]
+                                            flyActionParam: [116.360163, 40.001514, 14, 60, -45, 2000]
                                         })
                                         console.log(this.state.flyActionParam)
-                                    }}    
+                                    }}
                                 >局部演示</Button>,
-                                <Button 
-                                    key="5" 
-                                    type="primary" 
-                                    onClick={()=>{
+                                <Button
+                                    key="5"
+                                    type="primary"
+                                    onClick={() => {
                                         this.setState({
-                                            flyActionParam:[116.420608,39.851744,11.5,60,-30,1000]
+                                            flyActionParam: [116.420608, 39.851744, 11.5, 60, -30, 1000]
                                         })
-                                    }}     
+                                    }}
                                 >全局演示</Button>,
                                 <Button
                                     key="6"
@@ -103,16 +111,16 @@ class Analysis extends Component {
                                                 data: [],
                                                 datatime: ''
                                             },
-                                            flyActionParam:[116.368608, 39.901744,10,60,-30,1000]
+                                            flyActionParam: [116.368608, 39.901744, 10, 60, -30, 1000]
                                         })
                                     }}>地图重置</Button>,
                             ]}
                         />
                     </Col>
                 </Row>
-                <Row gutter={[16, 16]}>
+                <Row gutter={[16, 4]}>
                     <Col span={24} className="mapContainer">
-                        <MapBoxVis data={this.state.data} flyActionParam={this.state.flyActionParam}/>
+                        <MapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} />
                     </Col>
                 </Row>
             </div>

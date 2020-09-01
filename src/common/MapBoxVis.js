@@ -45,6 +45,13 @@ class MapBoxVis extends Component {
         }
     }
 
+    componentWillUnmount() {
+        console.log('MapBoxVis Destory')
+        this.myChartGl = null // echarts对象实例
+        this.mapbox = null // mapbox对象实例
+        window.mapboxgl = null
+    }
+
     move_fly = (mapbox, lon, lat, zoom, pitch, bearing, duration) => {
         mapbox.easeTo({
             // CameraOptions
@@ -81,7 +88,8 @@ class MapBoxVis extends Component {
         // let barSize = (2 ** (zoomeLevel - 11)) * 0.08
         this.myChartGl.setOption({
             title: {
-                text: '交通三维柱状图',
+                // text: '交通拥堵情况三维柱状图',
+                text: this.props.chartsParam.titleText,
                 padding: 20,//各个方向的内边距，默认是5，可以自行设置
                 subtext: datatime ? datatime : '', //"2019-12-13 14:00", //主标题的副标题文本内容，如果需要副标题就配置这一项
                 subtextStyle: {//副标题内容的样式
@@ -169,7 +177,7 @@ class MapBoxVis extends Component {
 
         this.mapbox.on('load', function () {
             console.log("地图加载")
-            window.mapboxgl = null;
+            // window.mapboxgl = null;
         });
 
         // this.mapbox.on('mousedown', function () {
