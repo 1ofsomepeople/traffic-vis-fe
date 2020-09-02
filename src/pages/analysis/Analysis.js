@@ -119,7 +119,7 @@ class Analysis extends Component {
                 </Row>
                 <Row gutter={[16, 4]}>
                     <Col span={24} className="mapContainer">
-                        <EchartsMapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} />
+                        <EchartsMapBoxVis mapContainerID="mapContainer" chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} />
                     </Col>
                 </Row>
             </div>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Button, PageHeader } from 'antd';
 import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
+import MapBoxPointsVis from '../../common/MapBoxPointsVis'
 
 import './PredictionAnalysis.css';
 
@@ -11,9 +12,9 @@ class PredictionAnalysis extends Component {
             // 模拟数据
             data: {
                 data: [
-                    [116.368608, 39.901744, 150],
-                    [116.378608, 39.901744, 350],
-                    [116.388608, 39.901744, 500],
+                    // [116.368608, 39.901744, 150],
+                    // [116.378608, 39.901744, 350],
+                    // [116.388608, 39.901744, 500],
                 ],
                 datatime: ''
             },
@@ -22,7 +23,7 @@ class PredictionAnalysis extends Component {
             }
         }
     }
-    render() { 
+    render() {
         return (
             <div>
                 <Row gutter={[16, 0]}>
@@ -30,28 +31,24 @@ class PredictionAnalysis extends Component {
                         <PageHeader
                             ghost={false}
                             onBack={() => window.history.back()}
-                            title="交通拥堵预测"
-                            // subTitle="交通拥堵"
+                            title="交通拥堵预测对比"
+                        // subTitle="交通拥堵"
                         />
                     </Col>
                 </Row>
                 <Row gutter={[16, 4]}>
                     <Col span={12} className="mapContainer">
-                        {/* <EchartsMapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> */}
-                        <div style={{background:"gray", minHeight: "450px", padding:"10px"}}>
-                            <EchartsMapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> 
-                        </div>
+                        <EchartsMapBoxVis mapContainerID="mapContainerLeft" chartsParam={{titleText: "拥堵真实情况"}}  data={this.state.data} flyActionParam={this.state.flyActionParam} />
+                        {/* <MapBoxPointsVis mapContainerID="mapContainerLeft"/> */}
                     </Col>
                     <Col span={12} className="mapContainer">
-                        {/* <EchartsMapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> */}
-                        <div style={{background:"gray", minHeight: "450px" , padding:"10px"}}>
-                            <EchartsMapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> 
-                        </div>
+                        <EchartsMapBoxVis mapContainerID="mapContainerRight" chartsParam={{titleText: "拥堵预测情况"}} data={this.state.data} flyActionParam={this.state.flyActionParam} />
+                        {/* <MapBoxPointsVis mapContainerID="mapContainerRight"/> */}
                     </Col>
                 </Row>
             </div>
         );
     }
 }
- 
+
 export default PredictionAnalysis;

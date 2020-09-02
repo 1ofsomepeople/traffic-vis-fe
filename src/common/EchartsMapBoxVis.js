@@ -12,14 +12,14 @@ class EchartsMapBoxVis extends Component {
         this.state = {}
         this.myChartGl = null // echarts对象实例
         this.mapbox = null // mapbox对象实例
-        // window.mapboxgl = mapboxgl;
+        window.mapboxgl = mapboxgl;
         setTimeout(() => {
             this.showmapbox(this.props.data.data, this.props.data.datatime);
         })
     }
 
     componentDidMount() {
-        window.mapboxgl = mapboxgl;
+        // window.mapboxgl = mapboxgl;
         window.onresize = () => {
             this.myChartGl.resize()
         }
@@ -47,7 +47,7 @@ class EchartsMapBoxVis extends Component {
         console.log('EchartsMapBoxVis Destory')
         this.myChartGl = null // echarts对象实例
         this.mapbox = null // mapbox对象实例
-        window.mapboxgl = null
+        // window.mapboxgl = null
     }
 
     move_fly = (mapbox, lon, lat, zoom, pitch, bearing, duration) => {
@@ -80,7 +80,7 @@ class EchartsMapBoxVis extends Component {
         mapboxgl.accessToken = 'pk.eyJ1IjoiaHVzdDEyIiwiYSI6ImNrM3BpbDhsYTAzbDgzY3J2OXBzdXFuNDMifQ.bDD9-o_SB4fR0UXzYLy9gg';
 
         // echarts对象实例
-        this.myChartGl = echarts.init(document.getElementById('mapbox_echartgl'));
+        this.myChartGl = echarts.init(document.getElementById(this.props.mapContainerID));
 
         // let zoomeLevel = 11
         // let barSize = (2 ** (zoomeLevel - 11)) * 0.08
@@ -210,7 +210,7 @@ class EchartsMapBoxVis extends Component {
     };
     render() {
         return (
-            <div id="mapbox_echartgl" className="mapBoxContainer" style={{ minHeight: "600px" }} />
+            <div id={this.props.mapContainerID} className="mapBoxContainer" style={{ minHeight: "600px" }} />
         );
     }
 }
