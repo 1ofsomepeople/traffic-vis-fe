@@ -38,11 +38,15 @@ class PredictionAnalysis extends Component {
                 <Row gutter={[16, 4]}>
                     <Col span={12} className="mapContainer">
                         {/* <MapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> */}
-                        <div style={{background:"gray", minHeight: "450px"}}></div>
+                        <div style={{background:"gray", minHeight: "450px", padding:"10px"}}>
+                            <MapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> 
+                        </div>
                     </Col>
                     <Col span={12} className="mapContainer">
                         {/* <MapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> */}
-                        <div style={{background:"gray", minHeight: "450px"}}></div>
+                        <div style={{background:"gray", minHeight: "450px" , padding:"10px"}}>
+                            <MapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> 
+                        </div>
                     </Col>
                 </Row>
             </div>

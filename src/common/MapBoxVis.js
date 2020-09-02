@@ -13,7 +13,7 @@ class MapBoxVis extends Component {
         console.log(this.props.data)
         this.myChartGl = null // echarts对象实例
         this.mapbox = null // mapbox对象实例
-
+        // window.mapboxgl = mapboxgl;
         setTimeout(() => {
             this.showmapbox(this.props.data.data, this.props.data.datatime);
         })
@@ -49,7 +49,7 @@ class MapBoxVis extends Component {
         console.log('MapBoxVis Destory')
         this.myChartGl = null // echarts对象实例
         this.mapbox = null // mapbox对象实例
-        window.mapboxgl = null
+        // window.mapboxgl = null
     }
 
     move_fly = (mapbox, lon, lat, zoom, pitch, bearing, duration) => {
@@ -121,7 +121,7 @@ class MapBoxVis extends Component {
                 min: 100,
                 max: 500,
             },
-            mapbox3D: {
+            mapbox: {
                 // echarts-gl中mapbox只能应用部分配置，更多的mapbox配置要使用mapbox的api
                 // Mapbox 地图样式 style
                 style: 'mapbox://styles/mapbox/outdoors-v11',
@@ -137,7 +137,7 @@ class MapBoxVis extends Component {
 
             series: [{
                 type: 'bar3D',
-                coordinateSystem: 'mapbox3D',
+                coordinateSystem: 'mapbox',
                 data: data ? data : [],
                 shading: 'color',
                 minHeight: 100,
