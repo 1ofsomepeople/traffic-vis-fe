@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Button, PageHeader } from 'antd';
-import MapBoxVis from '../../common/MapBoxVis';
+import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 
 import './PredictionAnalysis.css';
 
@@ -37,15 +37,15 @@ class PredictionAnalysis extends Component {
                 </Row>
                 <Row gutter={[16, 4]}>
                     <Col span={12} className="mapContainer">
-                        {/* <MapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> */}
+                        {/* <EchartsMapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> */}
                         <div style={{background:"gray", minHeight: "450px", padding:"10px"}}>
-                            <MapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> 
+                            <EchartsMapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> 
                         </div>
                     </Col>
                     <Col span={12} className="mapContainer">
-                        {/* <MapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> */}
+                        {/* <EchartsMapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> */}
                         <div style={{background:"gray", minHeight: "450px" , padding:"10px"}}>
-                            <MapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> 
+                            <EchartsMapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} /> 
                         </div>
                     </Col>
                 </Row>

@@ -3,14 +3,13 @@ import mapboxgl from 'mapbox-gl';
 import echarts from 'echarts';
 import 'echarts-gl';
 
-import './MapBoxVis.css'
+import './EchartsMapBoxVis.css'
 
 
-class MapBoxVis extends Component {
+class EchartsMapBoxVis extends Component {
     constructor(props) {
         super(props);
         this.state = {}
-        console.log(this.props.data)
         this.myChartGl = null // echarts对象实例
         this.mapbox = null // mapbox对象实例
         // window.mapboxgl = mapboxgl;
@@ -26,7 +25,6 @@ class MapBoxVis extends Component {
         }
     }
     componentDidUpdate() {
-        console.log(this.props)
         let data = this.props.data.data
         let datatime = this.props.data.datatime
         this.myChartGl.setOption({
@@ -46,10 +44,10 @@ class MapBoxVis extends Component {
     }
 
     componentWillUnmount() {
-        console.log('MapBoxVis Destory')
+        console.log('EchartsMapBoxVis Destory')
         this.myChartGl = null // echarts对象实例
         this.mapbox = null // mapbox对象实例
-        // window.mapboxgl = null
+        window.mapboxgl = null
     }
 
     move_fly = (mapbox, lon, lat, zoom, pitch, bearing, duration) => {
@@ -217,4 +215,4 @@ class MapBoxVis extends Component {
     }
 }
 
-export default MapBoxVis;
+export default EchartsMapBoxVis;

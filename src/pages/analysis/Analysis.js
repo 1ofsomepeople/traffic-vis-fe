@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Button, PageHeader } from 'antd';
-import MapBoxVis from '../../common/MapBoxVis';
+import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 import './Analysis.css'
 class Analysis extends Component {
     constructor(props) {
@@ -19,7 +19,6 @@ class Analysis extends Component {
                 titleText: "交通拥堵情况三维柱状图",
             }
         }
-
     };
 
     // 加载数据
@@ -120,7 +119,7 @@ class Analysis extends Component {
                 </Row>
                 <Row gutter={[16, 4]}>
                     <Col span={24} className="mapContainer">
-                        <MapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} />
+                        <EchartsMapBoxVis chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} />
                     </Col>
                 </Row>
             </div>

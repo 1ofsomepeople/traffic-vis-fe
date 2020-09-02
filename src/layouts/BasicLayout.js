@@ -70,7 +70,6 @@ class BasicLayout extends Component {
     }
 
     onCollapse = collapsed => {
-        console.log(collapsed);
         this.setState({ collapsed });
     };
 
@@ -81,10 +80,9 @@ class BasicLayout extends Component {
         const { location } = this.props;
         const pathSnippets = location.pathname.split('/').filter(i => i);
 
-        console.log(pathSnippets)
         const extraBreadcrumbItems = pathSnippets.map((_, index) => {
             const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
-            console.log(url)
+
             return (
                 <Breadcrumb.Item key={url}>
                     {breadcrumbMap[url].icon}
