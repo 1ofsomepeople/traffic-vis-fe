@@ -19,6 +19,8 @@ class Analysis extends Component {
                 titleText: "交通拥堵情况三维柱状图",
             }
         }
+        this.DataNameList = null // 轮播的数据name list
+        this.dataListIndex = 0 // 遍历数据list的index
     };
 
     // 加载数据
@@ -57,7 +59,53 @@ class Analysis extends Component {
             })
     };
 
+    // load datalist
+    loadDataList = () => {
+        let DataNameList = []
+        let startTimeStr = "2019-04-02_08-30"
+        let endTimeStr = "2019-04-02_09-30"
+
+        let timeIndex = startTimeStr
+        while (timeIndex <= endTimeStr) {
+            DataNameList.push(timeIndex + '.json')
+
+            let timeIndexObj = this.dataStr_dataObj(timeIndex)
+
+            if (timeIndexObj['minute'] + 1 > 59) {
+                timeIndexObj['minute'] = 0
+                timeIndexObj['hour'] += 1
+            }
+            else {
+                timeIndexObj['minute'] += 1
+            }
+            timeIndex = this.dataObj_dataStr(timeIndexObj)
+        }
+        this.DataNameList = DataNameList
+        this.intervalPlay(this.DataNameList)
+    }
+    intervalPlay(DataNameList) {
+        this.intervalID = setInterval(() => {
+            let path = './testDataList/' + DataNameList[this.dataListIndex > DataNameList.length ? this.dataListIndex = 0 : this.dataListIndex++]
+            this.loaddata(path)
+        }, 500)
+    }
+    dataStr_dataObj(dataStr) {
+        let dataArr = dataStr.split('_')[0].split('-').concat(dataStr.split('_')[1].split('-'))
+        let resObj = {
+            'year': parseInt(dataArr[0]),
+            'month': parseInt(dataArr[1]),
+            'day': parseInt(dataArr[2]),
+            'hour': parseInt(dataArr[3]),
+            'minute': parseInt(dataArr[4]),
+        }
+        return resObj
+    }
+    dataObj_dataStr(dataObj) {
+        return String(dataObj['year']) + '-' + ('0' + String(dataObj['month'])).slice(-2) + '-' + ('0' + String(dataObj['day'])).slice(-2) + '_' + ('0' + String(dataObj['hour'])).slice(-2) + '-' + ('0' + String(dataObj['minute'])).slice(-2)
+    }
+
     componentDidMount() {
+
     };
 
     componentWillUnmount() {
@@ -81,14 +129,36 @@ class Analysis extends Component {
                                     onClick={() => {
                                         this.loaddata("./2019-04-02_09-00.json")
                                     }}>测试数据</Button>,
-                                <Button key="2" type="primary" >数据轮播</Button>,
+                                <Button
+                                    key="2"
+                                    type="primary"
+                                    onClick={() => {
+                                        if (this.intervalID) {
+                                            clearInterval(this.intervalID);
+                                            this.intervalID = null
+                                        }
+                                        else {
+                                            this.loadDataList()
+                                        }
+                                    }}
+                                >数据轮播</Button>,
                                 <Button key="3" type="primary" >单数据动态演示</Button>,
                                 <Button
                                     key="4"
                                     type="primary"
                                     onClick={() => {
+                                        if (this.intervalID) {
+                                            clearInterval(this.intervalID);
+                                            this.intervalID = null
+                                        }
                                         this.setState({
                                             flyActionParam: [116.360163, 40.001514, 14, 60, -45, 2000]
+                                        }, () => {
+                                            if (this.DataNameList) {
+                                                this.timeoutID = setTimeout(() => { 
+                                                    this.intervalPlay(this.DataNameList) 
+                                                }, 2000)
+                                            }
                                         })
                                         console.log(this.state.flyActionParam)
                                     }}
@@ -97,9 +167,21 @@ class Analysis extends Component {
                                     key="5"
                                     type="primary"
                                     onClick={() => {
+
+                                        if (this.intervalID) {
+                                            clearInterval(this.intervalID);
+                                            this.intervalID = null
+                                        }
                                         this.setState({
                                             flyActionParam: [116.420608, 39.851744, 11.5, 60, -30, 1000]
+                                        }, () => {
+                                            if (this.DataNameList) {
+                                                this.timeoutID = setTimeout(() => { 
+                                                    this.intervalPlay(this.DataNameList) 
+                                                }, 2000)
+                                            }
                                         })
+                                        console.log(this.state.flyActionParam)
                                     }}
                                 >全局演示</Button>,
                                 <Button
@@ -112,6 +194,11 @@ class Analysis extends Component {
                                             },
                                             flyActionParam: [116.368608, 39.901744, 10, 60, -30, 1000]
                                         })
+                                        clearInterval(this.intervalID);
+                                        clearTimeout(this.timeoutID)
+                                        this.timeoutID = null
+                                        this.intervalID = null
+                                        this.dataListIndex = 0
                                     }}>地图重置</Button>,
                             ]}
                         />

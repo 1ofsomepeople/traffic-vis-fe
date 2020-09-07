@@ -38,11 +38,11 @@ class PredictionAnalysis extends Component {
                 </Row>
                 <Row gutter={[16, 4]}>
                     <Col span={12} className="mapContainer">
-                        <EchartsMapBoxVis mapContainerID="mapContainerLeft" chartsParam={{titleText: "拥堵真实情况"}}  data={this.state.data} flyActionParam={this.state.flyActionParam} />
+                        <EchartsMapBoxVis mapContainerID="mapContainerLeft" chartsParam={{titleText: "拥堵真实情况"}}  data={this.state.data}/>
                         {/* <MapBoxPointsVis mapContainerID="mapContainerLeft"/> */}
                     </Col>
                     <Col span={12} className="mapContainer">
-                        <EchartsMapBoxVis mapContainerID="mapContainerRight" chartsParam={{titleText: "拥堵预测情况"}} data={this.state.data} flyActionParam={this.state.flyActionParam} />
+                        <EchartsMapBoxVis mapContainerID="mapContainerRight" chartsParam={{titleText: "拥堵预测情况"}} data={this.state.data}/>
                         {/* <MapBoxPointsVis mapContainerID="mapContainerRight"/> */}
                     </Col>
                 </Row>
