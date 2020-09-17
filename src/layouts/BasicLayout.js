@@ -104,9 +104,20 @@ class BasicLayout extends Component {
         const BreadcrumbItems = this.getBreadcrumbItems()
         return (
             <Layout style={{ minHeight: '100vh' }}>
-                <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+                <Sider
+                    // collapsible
+                    // collapsed={this.state.collapsed}
+                    // onCollapse={this.onCollapse}
+                    style={{
+                        overflow: 'auto',
+                        height: '100vh',
+                        position: 'fixed',
+                        left: 0,
+                    }}
+                >
                     <div className="logo" />
-                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline"
+                    >
                         <Menu.Item key="1" icon={<HomeOutlined />}>
                             <Link to="/">首页</Link>
                         </Menu.Item>
@@ -128,9 +139,9 @@ class BasicLayout extends Component {
                         <Menu.Item key="9" icon={<FileOutlined />} >others</Menu.Item>
                     </Menu>
                 </Sider>
-                <Layout className="site-layout">
-                    <Header className="site-layout-background header-title" style={{ padding: 0 }} >交通大数据可视化分析系统</Header>
-                    <Content style={{ margin: '0 16px' }}>
+                <Layout className="site-layout" style={{ marginLeft: 200 }}>
+                    <Header className="site-layout-background header-title" style={{ padding: 0 }} >交通数据可视化分析系统</Header>
+                    <Content style={{ margin: '0 16px', overflow: 'initial' }}>
                         <Breadcrumb style={{ margin: '16px 0' }}>
                             {BreadcrumbItems}
                         </Breadcrumb>

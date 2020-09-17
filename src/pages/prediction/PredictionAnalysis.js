@@ -43,7 +43,27 @@ class PredictionAnalysis extends Component {
                             ghost={false}
                             onBack={() => window.history.back()}
                             title="交通拥堵预测对比"
-                        // subTitle="交通拥堵"
+                            // subTitle="交通拥堵"
+                            extra={[
+                                <Button
+                                    key="1"
+                                    type="primary"
+                                    onClick={() => {
+
+                                    }}
+                                >
+                                    历史预测对比
+                                </Button>,
+                                <Button
+                                    key="2"
+                                    type="primary"
+                                    onClick={() => {
+
+                                    }}
+                                >
+                                    实时交通预测
+                                </Button>,
+                            ]}
                         />
                     </Col>
                 </Row>

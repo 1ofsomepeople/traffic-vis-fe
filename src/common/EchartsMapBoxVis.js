@@ -9,7 +9,9 @@ import './EchartsMapBoxVis.css'
 class EchartsMapBoxVis extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            titleText : this.props.chartsParam.titleText ? this.props.chartsParam.titleText : ' ',
+        }
         this.myChartGl = null // echarts对象实例
         this.mapbox = null // mapbox对象实例
         window.mapboxgl = mapboxgl;
@@ -110,7 +112,7 @@ class EchartsMapBoxVis extends Component {
         this.myChartGl.setOption({
             title: {
                 // text: '交通拥堵情况三维柱状图',
-                text: this.props.chartsParam.titleText,
+                text: this.state.titleText,
                 padding: 20,//各个方向的内边距，默认是5，可以自行设置
                 subtext: datatime ? datatime : '', //"2019-12-13 14:00", //主标题的副标题文本内容，如果需要副标题就配置这一项
                 subtextStyle: {//副标题内容的样式

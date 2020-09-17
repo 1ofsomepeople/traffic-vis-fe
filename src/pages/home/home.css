@@ -1,0 +1,25 @@
+#homeBar1{
+    /* background-color: blanchedalmond; */
+}
+#homeBar2{
+    /* background-color: cadetblue; */
+}
+#homeBar3{
+    /* background-color: darkcyan; */
+}
+
+.homeBar{
+    width: 100%;
+    min-width: 800px;
+    height: 80vh;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px 0 rgba(39,61,86,.14);
+}
+
+.messageBar{
+    /* background-color: darkcyan; */
+}
+.showBar{
+    /* background-color: blanchedalmond; */
+}
