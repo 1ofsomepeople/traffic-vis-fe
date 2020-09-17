@@ -16,6 +16,17 @@ class EchartsMapBoxVis extends Component {
         setTimeout(() => {
             this.showmapbox(this.props.data.data, this.props.data.datatime);
         })
+        this.asyncParam = {
+            center: [116.368608, 39.901744],
+            // Mapbox 地图的缩放等级
+            zoom: 10,
+            // 视角俯视的倾斜角度,默认为0，也就是正对着地图。最大60。
+            pitch: 60,
+            // Mapbox 地图的旋转角度
+            bearing: -30,
+        }
+
+        this.showmapbox = this.showmapbox.bind(this)
     }
 
     componentDidMount() {
@@ -27,14 +38,26 @@ class EchartsMapBoxVis extends Component {
     componentDidUpdate() {
         let data = this.props.data.data
         let datatime = this.props.data.datatime
-        this.myChartGl.setOption({
+        let asyncParam= this.props.asyncParam ? this.props.chartsParam.mapParam : null 
+
+        let newOption = {
             title: {
                 subtext: datatime ? datatime : '',
             },
             series: [{
                 data: data ? data : [],
-            }]
-        })
+                barSize: (2 ** (this.mapbox.getZoom() - 10) * 0.1),
+            }],
+        }
+        if(asyncParam){
+            newOption.mapbox3D = {
+                center: asyncParam.center,
+                zoom: asyncParam.zoom,
+                pitch: asyncParam.pitch,
+                bearing: asyncParam.bearing,
+            }
+        }
+        this.myChartGl.setOption(newOption)
 
         let flyActionParam = this.props.flyActionParam
 
@@ -119,7 +142,7 @@ class EchartsMapBoxVis extends Component {
                 min: 100,
                 max: 500,
             },
-            mapbox: {
+            mapbox3D: {
                 // echarts-gl中mapbox只能应用部分配置，更多的mapbox配置要使用mapbox的api
                 // Mapbox 地图样式 style
                 style: 'mapbox://styles/mapbox/outdoors-v11',
@@ -135,7 +158,7 @@ class EchartsMapBoxVis extends Component {
 
             series: [{
                 type: 'bar3D',
-                coordinateSystem: 'mapbox',
+                coordinateSystem: 'mapbox3D',
                 data: data ? data : [],
                 shading: 'color',
                 minHeight: 100,
@@ -172,41 +195,27 @@ class EchartsMapBoxVis extends Component {
         //     container: document.querySelector('mapbox_echartgl') }
         // ));
 
-
-        this.mapbox.on('load', function () {
-            console.log("地图加载")
-            // window.mapboxgl = null;
-        });
-
-        // this.mapbox.on('mousedown', function () {
-        //     zoomeLevel = this.mapbox.getZoom()
-        //     console.log("鼠标点击开始")
-        //     if (this.button_flag) {
-        //         this.load_multi_data()
-        //         console.log("停止轮播")
-        //     }
+        // this.mapbox.on('load', function () {
+        //     console.log("地图加载")
+        //     // window.mapboxgl = null;
         // });
 
-        // this.mapbox.on('mouseup', function () {
-        //     zoomeLevel = this.mapbox.getZoom()
-        //     console.log("鼠标点击结束")
-        //     if (this.button_flag) {
-        //         this.load_multi_data()
-        //         console.log("重启轮播")
-        //     }
-        // });
+        this.mapbox.on('mousemove', () => {
+            let zoomLevel = this.mapbox.getZoom()
+            let center = [this.mapbox.getCenter().lng, this.mapbox.getCenter().lat]
+            let bearing = this.mapbox.getBearing()
+            let pitch = this.mapbox.getPitch()
 
-        // this.mapbox.on('zoomstart', function () {
-        //     zoomeLevel = this.mapbox.getZoom()
-        //     console.log("zoom变化开始" + zoomeLevel)
-        // });
-
-        // this.mapbox.on('zoomend', function () {
-        //     zoomeLevel = this.mapbox.getZoom()
-        //     console.log("zoom变化结束" + zoomeLevel)
-
-        // });
-
+            if (this.props.asyncParam) {
+                if (this.asyncParam.center[0] != center[0] || this.asyncParam.center[1] != center[1] || this.asyncParam.zoom != zoomLevel || this.asyncParam.bearing != bearing || this.asyncParam.pitch != pitch) {
+                    this.asyncParam.center = center
+                    this.asyncParam.zoom = zoomLevel
+                    this.asyncParam.bearing = bearing
+                    this.asyncParam.pitch = pitch
+                    this.props.asyncParam(this.asyncParam)
+                }
+            }
+        })
     };
     render() {
         return (
