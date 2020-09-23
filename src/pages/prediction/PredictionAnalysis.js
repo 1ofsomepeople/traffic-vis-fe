@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, PageHeader } from 'antd';
+import { Row, Col, Button, PageHeader, message } from 'antd';
 import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 import MapBoxPointsVis from '../../common/MapBoxPointsVis'
 
@@ -25,6 +25,8 @@ class PredictionAnalysis extends Component {
         }
 
         this.asyncMapParam = this.asyncMapParam.bind(this)
+        this.historyPredict = this.historyPredict.bind(this)
+        this.realTimePredice = this.realTimePredice.bind(this)
     }
 
     asyncMapParam(positionParam) {
@@ -33,6 +35,14 @@ class PredictionAnalysis extends Component {
             ...this.state,
             mapParam: positionParam
         })
+    }
+
+    historyPredict() {
+        message.warning('正在开发中');
+
+    }
+    realTimePredice() {
+        message.warning('正在开发中');
     }
     render() {
         return (
@@ -48,18 +58,14 @@ class PredictionAnalysis extends Component {
                                 <Button
                                     key="1"
                                     type="primary"
-                                    onClick={() => {
-
-                                    }}
+                                    onClick={this.historyPredict}
                                 >
                                     历史预测对比
                                 </Button>,
                                 <Button
                                     key="2"
                                     type="primary"
-                                    onClick={() => {
-
-                                    }}
+                                    onClick={this.realTimePredice}
                                 >
                                     实时交通预测
                                 </Button>,

@@ -142,7 +142,7 @@ class Analysis extends Component {
                                         }
                                     }}
                                 >数据轮播</Button>,
-                                <Button key="3" type="primary" >单数据动态演示</Button>,
+                                // <Button key="3" type="primary" >单数据动态演示</Button>,
                                 <Button
                                     key="4"
                                     type="primary"
@@ -167,7 +167,6 @@ class Analysis extends Component {
                                     key="5"
                                     type="primary"
                                     onClick={() => {
-
                                         if (this.intervalID) {
                                             clearInterval(this.intervalID);
                                             this.intervalID = null
