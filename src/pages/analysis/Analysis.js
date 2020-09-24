@@ -133,8 +133,13 @@ class Analysis extends Component {
                                     key="2"
                                     type="primary"
                                     onClick={() => {
+                                        this.setState({
+                                            ...this.state,
+                                            flyActionParam: null
+                                        })
                                         if (this.intervalID) {
                                             clearInterval(this.intervalID);
+                                            clearTimeout(this.timeoutID)
                                             this.intervalID = null
                                         }
                                         else {
@@ -152,7 +157,8 @@ class Analysis extends Component {
                                             this.intervalID = null
                                         }
                                         this.setState({
-                                            flyActionParam: [116.360163, 40.001514, 14, 60, -45, 2000]
+                                            ...this.state,
+                                            flyActionParam: [116.360163, 40.001514, 14, 60, -45, 1000]
                                         }, () => {
                                             if (this.DataNameList) {
                                                 this.timeoutID = setTimeout(() => { 
@@ -172,6 +178,7 @@ class Analysis extends Component {
                                             this.intervalID = null
                                         }
                                         this.setState({
+                                            ...this.state,
                                             flyActionParam: [116.420608, 39.851744, 11.5, 60, -30, 1000]
                                         }, () => {
                                             if (this.DataNameList) {
@@ -197,6 +204,7 @@ class Analysis extends Component {
                                         clearTimeout(this.timeoutID)
                                         this.timeoutID = null
                                         this.intervalID = null
+                                        this.DataNameList = null
                                         this.dataListIndex = 0
                                     }}>地图重置</Button>,
                             ]}

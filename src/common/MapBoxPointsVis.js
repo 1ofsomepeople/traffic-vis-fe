@@ -27,7 +27,7 @@ class MapBoxPointsVis extends Component {
     }
     render() { 
         return (
-            <div id={this.props.mapContainerID} style={{ minHeight: "600px" }}/>
+            <div id={this.props.mapContainerID} style={{ minHeight: "600px",height:"100%" }}/>
         );
     }
 }
