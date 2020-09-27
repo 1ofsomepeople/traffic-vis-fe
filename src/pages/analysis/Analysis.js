@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, PageHeader } from 'antd';
+import { Row, Col, Button, PageHeader, message } from 'antd';
 import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
+import {dataStr_dataObj, dataObj_dataStr, loadDataList} from '../../common/apis';
 import './Analysis.css'
 class Analysis extends Component {
     constructor(props) {
@@ -21,10 +22,12 @@ class Analysis extends Component {
         }
         this.DataNameList = null // 轮播的数据name list
         this.dataListIndex = 0 // 遍历数据list的index
+
+        this.loaddata = this.loaddata.bind(this)
     };
 
     // 加载数据
-    loaddata = (jsonPath) => {
+    loaddata1 = (jsonPath) => {
         // 读取本地的json，需要将json文件放到与public/index.html同级目录
         fetch(jsonPath)
             .then(res => res.json())
@@ -53,56 +56,63 @@ class Analysis extends Component {
                 }
                 data.data = dataP
                 data.datatime = jsonPath.split('/')[jsonPath.split('/').length - 1].split('.')[0]
+                console.log(data)
                 this.setState({
                     data: data
                 })
             })
     };
 
-    // load datalist
-    loadDataList = () => {
-        let DataNameList = []
-        let startTimeStr = "2019-04-02_08-30"
-        let endTimeStr = "2019-04-02_09-30"
-
-        let timeIndex = startTimeStr
-        while (timeIndex <= endTimeStr) {
-            DataNameList.push(timeIndex + '.json')
-
-            let timeIndexObj = this.dataStr_dataObj(timeIndex)
-
-            if (timeIndexObj['minute'] + 1 > 59) {
-                timeIndexObj['minute'] = 0
-                timeIndexObj['hour'] += 1
-            }
-            else {
-                timeIndexObj['minute'] += 1
-            }
-            timeIndex = this.dataObj_dataStr(timeIndexObj)
+    // 加载数据
+    async loaddata(jsonPath){
+        // 初始化数据结构
+        let data = {
+            data: [],
+            datatime: ''
         }
-        this.DataNameList = DataNameList
-        this.intervalPlay(this.DataNameList)
+        let response  = await fetch(jsonPath)
+        let resData = await response.json();
+        resData = resData.data
+        if(resData === undefined){
+            message.warning('获取数据失败');
+        }
+        else{
+            console.log(resData)
+            // 数据处理
+            for (let i = 0, len = resData.length; i < len; i++) {
+                // 数据映射 1->1 3->150 7-175 10->200
+                switch (resData[i][2]) {
+                    case 3:
+                        resData[i][2] = 150;
+                        break;
+                    case 7:
+                        resData[i][2] = 175;
+                        break;
+                    case 10:
+                        resData[i][2] = 200;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            data.data = resData
+            data.datatime = jsonPath.split('/')[jsonPath.split('/').length - 1].split('.')[0]
+        }
+        this.setState({
+            data: data
+        })
+        return data
     }
+
+
+    
     intervalPlay(DataNameList) {
         this.intervalID = setInterval(() => {
             let path = './testDataList/' + DataNameList[this.dataListIndex > DataNameList.length ? this.dataListIndex = 0 : this.dataListIndex++]
             this.loaddata(path)
         }, 500)
     }
-    dataStr_dataObj(dataStr) {
-        let dataArr = dataStr.split('_')[0].split('-').concat(dataStr.split('_')[1].split('-'))
-        let resObj = {
-            'year': parseInt(dataArr[0]),
-            'month': parseInt(dataArr[1]),
-            'day': parseInt(dataArr[2]),
-            'hour': parseInt(dataArr[3]),
-            'minute': parseInt(dataArr[4]),
-        }
-        return resObj
-    }
-    dataObj_dataStr(dataObj) {
-        return String(dataObj['year']) + '-' + ('0' + String(dataObj['month'])).slice(-2) + '-' + ('0' + String(dataObj['day'])).slice(-2) + '_' + ('0' + String(dataObj['hour'])).slice(-2) + '-' + ('0' + String(dataObj['minute'])).slice(-2)
-    }
+    
 
     componentDidMount() {
 
@@ -143,7 +153,8 @@ class Analysis extends Component {
                                             this.intervalID = null
                                         }
                                         else {
-                                            this.loadDataList()
+                                            this.DataNameList = loadDataList()
+                                            this.intervalPlay(this.DataNameList)
                                         }
                                     }}
                                 >数据轮播</Button>,

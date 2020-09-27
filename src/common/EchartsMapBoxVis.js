@@ -11,6 +11,7 @@ class EchartsMapBoxVis extends Component {
         super(props);
         this.state = {
             titleText : this.props.chartsParam.titleText ? this.props.chartsParam.titleText : ' ',
+            mapParam : this.props.chartsParam.mapParam ? this.props.chartsParam.mapParam : null,
         }
         this.myChartGl = null // echarts对象实例
         this.mapbox = null // mapbox对象实例
@@ -144,7 +145,20 @@ class EchartsMapBoxVis extends Component {
                 min: 100,
                 max: 500,
             },
-            mapbox3D: {
+            // mapbox3D: {
+            //     // echarts-gl中mapbox只能应用部分配置，更多的mapbox配置要使用mapbox的api
+            //     // Mapbox 地图样式 style
+            //     style: 'mapbox://styles/mapbox/outdoors-v11',
+            //     // Mapbox 地图中心经纬度,经纬度用数组表示
+            //     center: [116.368608, 39.901744],
+            //     // Mapbox 地图的缩放等级
+            //     zoom: 10,
+            //     // 视角俯视的倾斜角度,默认为0，也就是正对着地图。最大60。
+            //     pitch: 60,
+            //     // Mapbox 地图的旋转角度
+            //     bearing: -30,
+            // },
+            mapbox3D: this.state.mapParam ? this.state.mapParam : {
                 // echarts-gl中mapbox只能应用部分配置，更多的mapbox配置要使用mapbox的api
                 // Mapbox 地图样式 style
                 style: 'mapbox://styles/mapbox/outdoors-v11',
