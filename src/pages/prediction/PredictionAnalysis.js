@@ -4,10 +4,16 @@ import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 import MapBoxPointsVis from '../../common/MapBoxPointsVis'
 
 import './PredictionAnalysis.css';
+import { inject, observer } from 'mobx-react';
+// import {predictCompareStore} from "../../store/index";
 
+@inject('store')
+@observer
 class PredictionAnalysis extends Component {
     constructor(props) {
         super(props);
+        this.store = props.store.predictCompareStore
+        console.log(this.store.data)
         this.state = {
             // 模拟数据
             data: {

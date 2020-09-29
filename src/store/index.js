@@ -1,5 +1,6 @@
-import predictCompareStore from './predictCompare-store';
+import predictCompareStore from './predictCompareStore';
 
-export {
-    predictCompareStore,
+const store = {
+    predictCompareStore
 }
+export default store;

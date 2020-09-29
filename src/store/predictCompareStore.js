@@ -3,6 +3,7 @@ import {message} from 'antd';
 
 class PredictCompareStore {
     // @observable historyGtDataList = [];
+    @observable data = 'test';
 }
 
 
