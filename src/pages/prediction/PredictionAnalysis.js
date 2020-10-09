@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Button, PageHeader, message, Slider } from 'antd';
 import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 import MapBoxPointsVis from '../../common/MapBoxPointsVis'
-
+import { dataStr_dataObj, dataObj_dataStr, loadDataList, throttle, debounce } from '../../common/apis';
 import './PredictionAnalysis.css';
 import { inject, observer } from 'mobx-react';
 // import {predictCompareStore} from "../../store/index";
@@ -13,14 +13,16 @@ class PredictionAnalysis extends Component {
     constructor(props) {
         super(props);
         this.store = props.store.predictCompareStore
-        console.log(this.store.data)
+        // console.log(this.store.data)
         this.state = {
             // 模拟数据
-            data: {
+            dataPred: {
                 data: [
-                    // [116.368608, 39.901744, 150],
-                    // [116.378608, 39.901744, 350],
-                    // [116.388608, 39.901744, 500],
+                ],
+                datatime: ''
+            },
+            dataGt: {
+                data: [
                 ],
                 datatime: ''
             },
@@ -38,18 +40,25 @@ class PredictionAnalysis extends Component {
                 // Mapbox 地图的旋转角度
                 bearing: 0,
             },
-            marks:{
+            marks: {
 
-            }
+            },
+            sliderDisplay: 'none', //此状态为Slider的display的取值
+            dataListIndex: 0 // 数据list的index
         }
+
+        this.DataGtNameList = null // 真实数据的name list
+        this.DataPredNameList = null // 预测数据的name list
+
 
         this.asyncMapParam = this.asyncMapParam.bind(this)
         this.historyPredict = this.historyPredict.bind(this)
         this.realTimePredice = this.realTimePredice.bind(this)
+        this.sliderOnChange = this.sliderOnChange.bind(this)
     }
 
     asyncMapParam(positionParam) {
-        console.log(positionParam)
+        // console.log(positionParam)
         this.setState({
             ...this.state,
             mapParam: positionParam
@@ -57,12 +66,54 @@ class PredictionAnalysis extends Component {
     }
 
     historyPredict() {
-        message.warning('正在开发中');
+
+        let startTimeStr = "2019-04-02_08-30"
+        let endTimeStr = "2019-04-02_08-39"
+        this.DataGtNameList = loadDataList(startTimeStr, endTimeStr)
+        this.DataPredNameList = loadDataList(startTimeStr, endTimeStr)
+
+        let pathGt = './history_predictDataList/history_gt/' + this.DataGtNameList[0]
+        let pathPred = './history_predictDataList/history_pred/' + this.DataPredNameList[0]
+        this.store.loaddata(pathGt, 'gt')
+        this.store.loaddata(pathPred, 'pred')
+
+        let sliderMarks = {}
+        for (let index = 0; index < this.DataGtNameList.length; index++) {
+            const element = this.DataGtNameList[index];
+            // sliderMarks[index] = element.split('.')[0]
+            sliderMarks[index] = {
+                style: {
+                    // color: '#1890ff',
+                    width: '120px'
+                },
+                label: <strong>{element.split('.')[0]}</strong>
+            }
+        }
+        this.setState({
+            ...this.state,
+            marks: sliderMarks,
+            sliderDisplay: 'block',
+        })
+
 
     }
     realTimePredice() {
         message.warning('正在开发中');
     }
+
+    // 改变slider的值
+    sliderOnChange(value) {
+        this.setState({
+            ...this.state,
+            dataListIndex: value
+        }, () => {
+            let pathGt = './history_predictDataList/history_gt/' + this.DataGtNameList[value]
+            let pathPred = './history_predictDataList/history_pred/' + this.DataGtNameList[value]
+            this.store.loaddata(pathGt, 'gt')
+            this.store.loaddata(pathPred, 'pred')
+        })
+    }
+    
     render() {
         return (
             <div>
@@ -92,19 +143,30 @@ class PredictionAnalysis extends Component {
                         />
                     </Col>
                 </Row>
+                <Row align={"middle"} justify={"center"}>
+                    <Col span={22} >
+                        <Slider
+                            min={0}
+                            max={this.DataGtNameList ? this.DataGtNameList.length - 1 : 0}
+                            marks={this.state.marks}
+                            included={false}
+                            step={null}
+                            defaultValue={0}
+                            tooltipPlacement={'bottom'}
+                            tooltipVisible={false}
+                            style={{ display: this.state.sliderDisplay }}
+                            onChange={this.sliderOnChange}
+                        />
+                    </Col>
+                </Row>
                 <Row gutter={[16, 4]}>
                     <Col span={12} className="mapContainer">
-                        <EchartsMapBoxVis mapContainerID="mapContainerLeft" chartsParam={{ titleText: "拥堵真实情况", mapParam: this.state.mapParam }} data={this.state.data} asyncParam={this.asyncMapParam} />
+                        <EchartsMapBoxVis mapContainerID="mapContainerLeft" chartsParam={{ titleText: "拥堵真实情况", mapParam: this.state.mapParam }} data={this.store.dataGt} asyncParam={this.asyncMapParam} />
                         {/* <MapBoxPointsVis mapContainerID="mapContainerLeft"/> */}
                     </Col>
                     <Col span={12} className="mapContainer">
-                        <EchartsMapBoxVis mapContainerID="mapContainerRight" chartsParam={{ titleText: "拥堵预测情况", mapParam: this.state.mapParam }} data={this.state.data} asyncParam={this.asyncMapParam} />
+                        <EchartsMapBoxVis mapContainerID="mapContainerRight" chartsParam={{ titleText: "拥堵预测情况", mapParam: this.state.mapParam }} data={this.store.dataPred} asyncParam={this.asyncMapParam} />
                         {/* <MapBoxPointsVis mapContainerID="mapContainerRight"/> */}
-                    </Col>
-                </Row>
-                <Row align={"middle"} justify={"center"} className="margintop20">
-                    <Col span={20} >
-                        <Slider defaultValue={0} tooltipVisible marks={this.state.marks} step={null}/>
                     </Col>
                 </Row>
             </div>

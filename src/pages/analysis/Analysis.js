@@ -84,7 +84,7 @@ class Analysis extends Component {
             message.warning('获取数据失败');
         }
         else {
-            console.log(resData)
+            // console.log(resData)
             // 数据处理
             for (let i = 0, len = resData.length; i < len; i++) {
                 // 数据映射 1->1 3->150 7-175 10->200
@@ -138,7 +138,10 @@ class Analysis extends Component {
         }
         else {
             this.isplaying = true
-            this.DataNameList = loadDataList()
+
+            let startTimeStr = "2019-04-02_08-30"
+            let endTimeStr = "2019-04-02_09-30"
+            this.DataNameList = loadDataList(startTimeStr,endTimeStr)
             this.intervalPlay(this.DataNameList)
         }
     }

@@ -16,10 +16,10 @@ function dataObj_dataStr(dataObj) {
 };
 
 // load datalist
-function loadDataList(){
+function loadDataList(startTimeStr,endTimeStr){
     let DataNameList = []
-    let startTimeStr = "2019-04-02_08-30"
-    let endTimeStr = "2019-04-02_09-30"
+    // let startTimeStr = "2019-04-02_08-30"
+    // let endTimeStr = "2019-04-02_09-30"
 
     let timeIndex = startTimeStr
     while (timeIndex <= endTimeStr) {
