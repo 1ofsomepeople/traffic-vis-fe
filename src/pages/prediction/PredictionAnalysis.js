@@ -86,7 +86,7 @@ class PredictionAnalysis extends Component {
                     // color: '#1890ff',
                     width: '120px'
                 },
-                label: <strong>{element.split('.')[0]}</strong>
+                label: <span>{element.split('.')[0].split('_')[1].split('-').join(':')}</span>
             }
         }
         this.setState({
