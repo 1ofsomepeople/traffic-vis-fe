@@ -4,14 +4,15 @@ import echarts from 'echarts';
 import 'echarts-gl';
 
 import './EchartsMapBoxVis.css'
+import { eqArr } from './apis';
 
 
 class EchartsMapBoxVis extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            titleText : this.props.chartsParam.titleText ? this.props.chartsParam.titleText : ' ',
-            mapParam : this.props.chartsParam.mapParam ? this.props.chartsParam.mapParam : null,
+            titleText: this.props.chartsParam.titleText ? this.props.chartsParam.titleText : ' ',
+            mapParam: this.props.chartsParam.mapParam ? this.props.chartsParam.mapParam : null,
         }
         this.myChartGl = null // echarts对象实例
         this.mapbox = null // mapbox对象实例
@@ -41,7 +42,7 @@ class EchartsMapBoxVis extends Component {
     componentDidUpdate() {
         let data = this.props.data.data
         let datatime = this.props.data.datatime
-        let asyncParam= this.props.asyncParam ? this.props.chartsParam.mapParam : null 
+        let asyncParam = this.props.asyncParam ? this.props.chartsParam.mapParam : null
 
         let newOption = {
             title: {
@@ -52,7 +53,7 @@ class EchartsMapBoxVis extends Component {
                 barSize: (2 ** (this.mapbox.getZoom() - 10) * 0.1),
             }],
         }
-        if(asyncParam){
+        if (asyncParam) {
             newOption.mapbox3D = {
                 center: asyncParam.center,
                 zoom: asyncParam.zoom,
@@ -63,7 +64,6 @@ class EchartsMapBoxVis extends Component {
         this.myChartGl.setOption(newOption)
 
         let flyActionParam = this.props.flyActionParam
-
         if (flyActionParam) {
             this.move_fly(this.mapbox, ...flyActionParam);
         }
@@ -77,28 +77,35 @@ class EchartsMapBoxVis extends Component {
     }
 
     move_fly = (mapbox, lon, lat, zoom, pitch, bearing, duration) => {
-        mapbox.easeTo({
-            // CameraOptions
-            center: [lon, lat],
-            zoom: zoom,
-            // 视角俯视的倾斜角度,默认为0，也就是正对着地图。最大60。
-            pitch: pitch,
-            // Mapbox 地图的旋转角度
-            bearing: bearing,
-
-            // AnimationOptions
-            // 动态转换的持续时间，按毫秒计算
-            duration: duration,
-            maxDuration: duration,
-            // 该函数持续的时间在 0~1 之间， 返回一个表示状态的数字，初始状态为 0，最终状态为 1
-            easing(t) {
-                return t;
-                // return t*(2-t);
-            },
-            // If false , no animation will occur.
-            animate: true
-        });
-
+        this.nowMapParam = {
+            zoom: this.mapbox.getZoom(),
+            center: [this.mapbox.getCenter().lng, this.mapbox.getCenter().lat],
+            bearing: this.mapbox.getBearing(),
+            pitch: this.mapbox.getPitch()
+        }
+        if (lon !== this.nowMapParam.center[0] || lat !== this.nowMapParam.center[1] || zoom !== this.nowMapParam.zoom || pitch !== this.nowMapParam.pitch || bearing !== this.nowMapParam.bearing){
+            mapbox.easeTo({
+                // CameraOptions
+                center: [lon, lat],
+                zoom: zoom,
+                // 视角俯视的倾斜角度,默认为0，也就是正对着地图。最大60。
+                pitch: pitch,
+                // Mapbox 地图的旋转角度
+                bearing: bearing,
+    
+                // AnimationOptions
+                // 动态转换的持续时间，按毫秒计算
+                duration: duration,
+                maxDuration: duration,
+                // 该函数持续的时间在 0~1 之间， 返回一个表示状态的数字，初始状态为 0，最终状态为 1
+                easing(t) {
+                    return t;
+                    // return t*(2-t);
+                },
+                // If false , no animation will occur.
+                animate: true
+            });
+        }
     };
 
     showmapbox = (data = [], datatime = "") => {
@@ -235,7 +242,7 @@ class EchartsMapBoxVis extends Component {
     };
     render() {
         return (
-            <div id={this.props.mapContainerID} className="mapBoxContainer" style={{ minHeight: "600px", height:"100%",width:"100%"}} />
+            <div id={this.props.mapContainerID} className="mapBoxContainer" style={{ minHeight: "600px", height: "100%", width: "100%" }} />
         );
     }
 }

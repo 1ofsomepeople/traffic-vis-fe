@@ -40,5 +40,49 @@ function loadDataList(){
     
 }
 
+function eqArr(a, b) {
+    // 判断数组的长度
+    if (a.length !== b.length) {
+        return false
+    } else {
+        // 循环遍历数组的值进行比较
+        for (let i = 0; i < a.length; i++) {
+            if (a[i] !== b[i]) {
+                return false
+            }
+        }
+        return true;
+    }
+}
+// 4. 节流函数
+// 思路：在规定时间内只触发一次
+function throttle(fn, delay) {
+    // 利用闭包保存时间
+    let prev = Date.now()
+    return function () {
+        let context = this
+        let arg = arguments
+        let now = Date.now()
+        if (now - prev >= delay) {
+            fn.apply(context, arg)
+            prev = Date.now()
+        }
+    }
+}
+// 5. 防抖函数
+// 思路:在规定时间内未触发第二次，则执行
+function debounce(fn, delay) {
+    // 利用闭包保存定时器
+    let timer = null
+    return function () {
+        let context = this
+        let arg = arguments
+        // 在规定时间内再次触发会先清除定时器后再重设定时器
+        clearTimeout(timer)
+        timer = setTimeout(function () {
+            fn.apply(context, arg)
+        }, delay)
+    }
+}
 
-export {dataStr_dataObj, dataObj_dataStr, loadDataList}
+export {dataStr_dataObj, dataObj_dataStr, loadDataList, eqArr, throttle, debounce}
