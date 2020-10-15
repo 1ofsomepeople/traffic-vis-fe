@@ -98,7 +98,8 @@ class PredictionAnalysis extends Component {
 
     }
     realTimePredice() {
-        message.warning('正在开发中');
+        // message.warning('正在开发中');
+        this.store.getRealTimeData()
     }
 
     // 改变slider的值

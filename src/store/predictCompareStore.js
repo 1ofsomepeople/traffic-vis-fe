@@ -1,10 +1,13 @@
 import {action, observable} from 'mobx';
 import {message} from 'antd';
+import request from '../common/service'
 
 class PredictCompareStore {
     // @observable historyGtDataList = [];
     @observable dataGt = [];
     @observable dataPred = [];
+
+    @observable dataGtRT = [];
 
     // 加载数据
     @action async loaddata(jsonPath,type) {
@@ -49,6 +52,18 @@ class PredictCompareStore {
         }
         else{
             message.warning('loaddata param error');
+        }
+    }
+
+    @action async getRealTimeData(param){
+        // const res = await request.get('user/testapi')
+        const res = await request.get('data')
+        console.log(res)
+        if(res === undefined){
+            message.error('数据 undefined')
+        }
+        else{
+            this.dataGtRT = res
         }
     }
 }
