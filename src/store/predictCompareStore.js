@@ -56,6 +56,7 @@ class PredictCompareStore {
         }
     }
 
+    // 加载实时数据
     @action async getRealTimeData(param){
         // const res = await request.get('user/testapi')
         const res = await request.get('data')
@@ -95,6 +96,12 @@ class PredictCompareStore {
             // this.dataGtRTName = res.jsonName
             console.log(res)
         }
+    }
+
+    // 清理数据 
+    @action async clearAll(){
+        this.dataGt = []
+        this.dataPred = []
     }
 }
 

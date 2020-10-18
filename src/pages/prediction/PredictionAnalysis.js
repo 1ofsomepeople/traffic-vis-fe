@@ -57,6 +57,11 @@ class PredictionAnalysis extends Component {
         this.sliderOnChange = this.sliderOnChange.bind(this)
     }
 
+    componentWillUnmount() {
+        console.log('PredictionAnalysis Destory')
+        this.store.clearAll()
+    }
+
     asyncMapParam(positionParam) {
         // console.log(positionParam)
         this.setState({
