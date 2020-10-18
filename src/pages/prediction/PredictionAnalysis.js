@@ -100,6 +100,11 @@ class PredictionAnalysis extends Component {
     realTimePredice() {
         // message.warning('正在开发中');
         this.store.getRealTimeData()
+
+        this.setState({
+            ...this.state,
+            sliderDisplay: 'none',
+        })
     }
 
     // 改变slider的值
@@ -136,7 +141,7 @@ class PredictionAnalysis extends Component {
                                 <Button
                                     key="2"
                                     type="primary"
-                                    onClick={this.realTimePredice}
+                                    onClick={throttle(this.realTimePredice,1000)}
                                 >
                                     实时交通预测
                                 </Button>,

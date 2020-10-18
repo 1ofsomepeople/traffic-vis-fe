@@ -7,6 +7,7 @@ class PredictCompareStore {
     @observable dataGt = [];
     @observable dataPred = [];
 
+    @observable dataGtRTName = '';
     @observable dataGtRT = [];
 
     // 加载数据
@@ -58,12 +59,41 @@ class PredictCompareStore {
     @action async getRealTimeData(param){
         // const res = await request.get('user/testapi')
         const res = await request.get('data')
-        console.log(res)
+        // 初始化数据结构
+        let data = {
+            data: [],
+            datatime: ''
+        }
+        let resData = res.data
         if(res === undefined){
             message.error('数据 undefined')
         }
         else{
-            this.dataGtRT = res
+            // 数据处理
+            for (let i = 0, len = resData.length; i < len; i++) {
+                // 数据映射 1->1 3->150 7-175 10->200
+                switch (resData[i][2]) {
+                    case 3:
+                        resData[i][2] = 150;
+                        break;
+                    case 7:
+                        resData[i][2] = 175;
+                        break;
+                    case 10:
+                        resData[i][2] = 200;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+            data.data = resData
+            // data.datatime = res.jsonName.split('_')[0]+ ' ' + res.jsonName.split('_')[1].split('-').join(':')
+            data.datatime = res.jsonName
+            this.dataGt = data
+            // this.dataGtRT = resData
+            // this.dataGtRTName = res.jsonName
+            console.log(res)
         }
     }
 }

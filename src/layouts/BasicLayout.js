@@ -153,7 +153,7 @@ class BasicLayout extends Component {
                             }
                         </div>
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>Traffic Vis System ©2019 Created by STDAL</Footer>
+                    <Footer style={{ textAlign: 'center' }}>Traffic Vis System ©2020 Created by STDAL</Footer>
                 </Layout>
             </Layout>
         );
