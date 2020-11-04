@@ -26,9 +26,8 @@ class PredictionAnalysis extends Component {
                 ],
                 datatime: ''
             },
-            chartsParam: {
-                titleText: "交通拥堵情况三维柱状图",
-            },
+            titleTextLeft: "真实拥堵情况",
+            titleTextRight: "拥堵预测情况",
             mapParam: {
                 // Mapbox 地图样式 style
                 style: 'mapbox://styles/mapbox/outdoors-v11',
@@ -44,7 +43,8 @@ class PredictionAnalysis extends Component {
 
             },
             sliderDisplay: 'none', //此状态为Slider的display的取值
-            dataListIndex: 0 // 数据list的index
+            dataListIndex: 0, // 数据list的index
+            dataType:'history',
         }
 
         this.DataGtNameList = null // 真实数据的name list
@@ -66,7 +66,7 @@ class PredictionAnalysis extends Component {
         // console.log(positionParam)
         this.setState({
             ...this.state,
-            mapParam: positionParam
+            mapParam: positionParam,
         })
     }
 
@@ -98,17 +98,24 @@ class PredictionAnalysis extends Component {
             ...this.state,
             marks: sliderMarks,
             sliderDisplay: 'block',
+            dataType:'history',
+            titleTextLeft: "真实拥堵情况",
+            titleTextRight: "拥堵预测情况",
         })
 
 
     }
     realTimePredice() {
         // message.warning('正在开发中');
-        this.store.getRealTimeData()
+        this.store.getPredLr()
+        this.store.getPredSage()
 
         this.setState({
             ...this.state,
             sliderDisplay: 'none',
+            dataType:'realtime',
+            titleTextLeft: "LR模型预测",
+            titleTextRight: "SAGE模型预测",
         })
     }
 
@@ -148,7 +155,7 @@ class PredictionAnalysis extends Component {
                                     type="primary"
                                     onClick={throttle(this.realTimePredice,1000)}
                                 >
-                                    实时交通预测
+                                    交通拥堵预测模型对比
                                 </Button>,
                             ]}
                         />
@@ -172,12 +179,24 @@ class PredictionAnalysis extends Component {
                 </Row>
                 <Row gutter={[16, 4]}>
                     <Col span={12} className="mapContainer">
-                        <EchartsMapBoxVis mapContainerID="mapContainerLeft" chartsParam={{ titleText: "拥堵真实情况", mapParam: this.state.mapParam }} data={this.store.dataGt} asyncParam={this.asyncMapParam} />
-                        {/* <MapBoxPointsVis mapContainerID="mapContainerLeft"/> */}
+                        <EchartsMapBoxVis 
+                            mapContainerID="mapContainerLeft" 
+                            chartsParam={
+                                {titleText: this.state.titleTextLeft, mapParam: this.state.mapParam}
+                            } 
+                            data={this.state.dataType === 'history'? this.store.dataGt : this.store.dataPredLr} 
+                            asyncParam={this.asyncMapParam} 
+                        />
                     </Col>
                     <Col span={12} className="mapContainer">
-                        <EchartsMapBoxVis mapContainerID="mapContainerRight" chartsParam={{ titleText: "拥堵预测情况", mapParam: this.state.mapParam }} data={this.store.dataPred} asyncParam={this.asyncMapParam} />
-                        {/* <MapBoxPointsVis mapContainerID="mapContainerRight"/> */}
+                        <EchartsMapBoxVis 
+                            mapContainerID="mapContainerRight" 
+                            chartsParam={
+                                {titleText: this.state.titleTextRight, mapParam: this.state.mapParam}
+                            } 
+                            data={this.state.dataType === 'history'? this.store.dataPred : this.store.dataPredSage} 
+                            asyncParam={this.asyncMapParam} 
+                        />
                     </Col>
                 </Row>
             </div>
