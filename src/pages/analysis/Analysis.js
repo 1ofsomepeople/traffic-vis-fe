@@ -2,10 +2,17 @@ import React, { Component } from 'react';
 import { Row, Col, Button, PageHeader, message } from 'antd';
 import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 import { dataStr_dataObj, dataObj_dataStr, loadDataList, throttle, debounce } from '../../common/apis';
+import { inject, observer } from 'mobx-react';
+
 import './Analysis.css'
+
+
+@inject('store')
+@observer
 class Analysis extends Component {
     constructor(props) {
         super(props);
+        this.store = props.store.predictCompareStore
         this.state = {
             // 模拟数据
             data: {
@@ -16,6 +23,7 @@ class Analysis extends Component {
                 ],
                 datatime: ''
             },
+            dataType:'history',
             chartsParam: {
                 titleText: "交通拥堵情况三维柱状图",
             }
@@ -31,43 +39,6 @@ class Analysis extends Component {
         this.onClickBtn4 = this.onClickBtn4.bind(this)
         this.onClickBtn5 = this.onClickBtn5.bind(this)
         this.onClickBtn6 = this.onClickBtn6.bind(this)
-    };
-
-    // 加载数据
-    loaddata1 = (jsonPath) => {
-        // 读取本地的json，需要将json文件放到与public/index.html同级目录
-        fetch(jsonPath)
-            .then(res => res.json())
-            .then(json => {
-                let dataP = json.data
-                for (let i = 0, len = dataP.length; i < len; i++) {
-                    // 数据映射 1->1 3->150 7-175 10->200
-                    switch (dataP[i][2]) {
-                        case 3:
-                            dataP[i][2] = 150;
-                            break;
-                        case 7:
-                            dataP[i][2] = 175;
-                            break;
-                        case 10:
-                            dataP[i][2] = 200;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                // 初始化数据结构
-                let data = {
-                    data: [],
-                    datatime: ''
-                }
-                data.data = dataP
-                data.datatime = jsonPath.split('/')[jsonPath.split('/').length - 1].split('.')[0]
-                console.log(data)
-                this.setState({
-                    data: data
-                })
-            })
     };
 
     // 加载数据
@@ -106,7 +77,8 @@ class Analysis extends Component {
             data.datatime = jsonPath.split('/')[jsonPath.split('/').length - 1].split('.')[0]
         }
         this.setState({
-            data: data
+            data: data,
+            dataType:'history',
         })
         return data
     }
@@ -146,7 +118,12 @@ class Analysis extends Component {
         }
     }
     onClickBtn3() {
-
+        // message.warning('正在开发中');
+        this.store.getRealTimeData()
+        this.setState({
+            ...this.state,
+            dataType: 'realtime',
+        })
     }
     // 局部展示
     onClickBtn4() {
@@ -213,6 +190,7 @@ class Analysis extends Component {
 
     componentWillUnmount() {
         console.log('Analysis Destory')
+        this.store.clearAll()
     }
 
     render() {
@@ -235,7 +213,11 @@ class Analysis extends Component {
                                     type="primary"
                                     onClick={debounce(this.onClickBtn2, 500)}
                                 >数据轮播</Button>,
-                                // <Button key="3" type="primary" >单数据动态演示</Button>,
+                                <Button 
+                                    key="3" 
+                                    type="primary" 
+                                    onClick={debounce(this.onClickBtn3, 500)}
+                                >实时交通</Button>,
                                 <Button
                                     key="4"
                                     type="primary"
@@ -255,7 +237,12 @@ class Analysis extends Component {
                 </Row>
                 <Row gutter={[16, 4]}>
                     <Col span={24} className="mapContainer">
-                        <EchartsMapBoxVis mapContainerID="mapContainer" chartsParam={this.state.chartsParam} data={this.state.data} flyActionParam={this.state.flyActionParam} />
+                        <EchartsMapBoxVis 
+                            mapContainerID="mapContainer" 
+                            chartsParam={this.state.chartsParam} 
+                            data={this.state.dataType === 'history'? this.state.data : this.store.dataGt} 
+                            flyActionParam={this.state.flyActionParam} 
+                        />
                     </Col>
                 </Row>
             </div>
