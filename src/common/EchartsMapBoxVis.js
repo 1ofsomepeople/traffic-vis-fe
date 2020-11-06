@@ -46,6 +46,7 @@ class EchartsMapBoxVis extends Component {
 
         let newOption = {
             title: {
+                text: this.props.titleText,
                 subtext: datatime ? datatime : '',
             },
             series: [{

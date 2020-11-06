@@ -26,8 +26,8 @@ class PredictionAnalysis extends Component {
                 ],
                 datatime: ''
             },
-            titleTextLeft: "真实拥堵情况",
-            titleTextRight: "拥堵预测情况",
+            titleTextLeft: "",
+            titleTextRight: "",
             mapParam: {
                 // Mapbox 地图样式 style
                 style: 'mapbox://styles/mapbox/outdoors-v11',
@@ -181,8 +181,9 @@ class PredictionAnalysis extends Component {
                     <Col span={12} className="mapContainer">
                         <EchartsMapBoxVis 
                             mapContainerID="mapContainerLeft" 
+                            titleText = {this.state.titleTextLeft}
                             chartsParam={
-                                {titleText: this.state.titleTextLeft, mapParam: this.state.mapParam}
+                                {mapParam: this.state.mapParam}
                             } 
                             data={this.state.dataType === 'history'? this.store.dataGt : this.store.dataPredLr} 
                             asyncParam={this.asyncMapParam} 
@@ -191,8 +192,9 @@ class PredictionAnalysis extends Component {
                     <Col span={12} className="mapContainer">
                         <EchartsMapBoxVis 
                             mapContainerID="mapContainerRight" 
+                            titleText = {this.state.titleTextRight}
                             chartsParam={
-                                {titleText: this.state.titleTextRight, mapParam: this.state.mapParam}
+                                {mapParam: this.state.mapParam}
                             } 
                             data={this.state.dataType === 'history'? this.store.dataPred : this.store.dataPredSage} 
                             asyncParam={this.asyncMapParam} 
