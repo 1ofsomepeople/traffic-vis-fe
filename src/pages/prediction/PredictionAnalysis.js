@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, PageHeader, message, Slider } from 'antd';
+import { Row, Col, Button, PageHeader, message, Slider, Select  } from 'antd';
 import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 import MapBoxPointsVis from '../../common/MapBoxPointsVis'
 import { dataStr_dataObj, dataObj_dataStr, loadDataList, throttle, debounce } from '../../common/apis';
 import './PredictionAnalysis.css';
 import { inject, observer } from 'mobx-react';
 // import {predictCompareStore} from "../../store/index";
-
+const { Option } = Select;
 @inject('store')
 @observer
 class PredictionAnalysis extends Component {
@@ -161,8 +161,8 @@ class PredictionAnalysis extends Component {
                         />
                     </Col>
                 </Row>
-                <Row align={"middle"} justify={"center"}>
-                    <Col span={22} >
+                <Row align={"middle"} justify={"center"} gutter={[24, 4]}>
+                    <Col span={20} >
                         <Slider
                             min={0}
                             max={this.DataGtNameList ? this.DataGtNameList.length - 1 : 0}
@@ -175,6 +175,15 @@ class PredictionAnalysis extends Component {
                             style={{ display: this.state.sliderDisplay }}
                             onChange={this.sliderOnChange}
                         />
+                    </Col>
+                    <Col span={2}>
+                        <Select 
+                            defaultValue="lr" 
+                            style={{ width: '100%', display: this.state.sliderDisplay }} 
+                        >
+                            <Option value="lr">LR</Option>
+                            <Option value="sage">SAGE</Option>
+                        </Select>
                     </Col>
                 </Row>
                 <Row gutter={[16, 4]}>
