@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, PageHeader, message, Slider, Select  } from 'antd';
+import { Row, Col, Button, PageHeader, message, Slider, Select } from 'antd';
 import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 import MapBoxPointsVis from '../../common/MapBoxPointsVis'
 import { dataStr_dataObj, dataObj_dataStr, loadDataList, throttle, debounce } from '../../common/apis';
@@ -44,7 +44,8 @@ class PredictionAnalysis extends Component {
             },
             sliderDisplay: 'none', //此状态为Slider的display的取值
             dataListIndex: 0, // 数据list的index
-            dataType:'history',
+            dataType: 'history',
+            historyPredDataPath: './history_predictDataList/history_pred/lr_pred/', // 历史预测数据根路径
         }
 
         this.DataGtNameList = null // 真实数据的name list
@@ -55,6 +56,7 @@ class PredictionAnalysis extends Component {
         this.historyPredict = this.historyPredict.bind(this)
         this.realTimePredice = this.realTimePredice.bind(this)
         this.sliderOnChange = this.sliderOnChange.bind(this)
+        this.selectOnChange = this.selectOnChange.bind(this)
     }
 
     componentWillUnmount() {
@@ -78,7 +80,7 @@ class PredictionAnalysis extends Component {
         this.DataPredNameList = loadDataList(startTimeStr, endTimeStr)
 
         let pathGt = './history_predictDataList/history_gt/' + this.DataGtNameList[0]
-        let pathPred = './history_predictDataList/history_pred/' + this.DataPredNameList[0]
+        let pathPred = this.state.historyPredDataPath + this.DataPredNameList[0]
         this.store.loaddata(pathGt, 'gt')
         this.store.loaddata(pathPred, 'pred')
 
@@ -98,9 +100,9 @@ class PredictionAnalysis extends Component {
             ...this.state,
             marks: sliderMarks,
             sliderDisplay: 'block',
-            dataType:'history',
+            dataType: 'history',
             titleTextLeft: "真实拥堵情况",
-            titleTextRight: "拥堵预测情况",
+            titleTextRight: "拥堵预测情况 LR模型",
         })
 
 
@@ -113,7 +115,7 @@ class PredictionAnalysis extends Component {
         this.setState({
             ...this.state,
             sliderDisplay: 'none',
-            dataType:'realtime',
+            dataType: 'realtime',
             titleTextLeft: "LR模型预测",
             titleTextRight: "SAGE模型预测",
         })
@@ -126,12 +128,28 @@ class PredictionAnalysis extends Component {
             dataListIndex: value
         }, () => {
             let pathGt = './history_predictDataList/history_gt/' + this.DataGtNameList[value]
-            let pathPred = './history_predictDataList/history_pred/' + this.DataGtNameList[value]
+            let pathPred = this.state.historyPredDataPath + this.DataGtNameList[value]
             this.store.loaddata(pathGt, 'gt')
             this.store.loaddata(pathPred, 'pred')
         })
     }
-    
+
+    selectOnChange(value) {
+        let predPath = this.state.historyPredDataPath
+        if (value === 'lr') {
+            predPath = './history_predictDataList/history_pred/lr_pred/'
+        }
+        else if (value === 'sage') {
+            predPath = './history_predictDataList/history_pred/sage_pred/'
+        }
+
+        this.setState({
+            ...this.state,
+            titleTextRight: '拥堵预测情况 ' + value + '模型',
+            historyPredDataPath: predPath,
+        })
+    }
+
     render() {
         return (
             <div>
@@ -153,7 +171,7 @@ class PredictionAnalysis extends Component {
                                 <Button
                                     key="2"
                                     type="primary"
-                                    onClick={throttle(this.realTimePredice,1000)}
+                                    onClick={throttle(this.realTimePredice, 1000)}
                                 >
                                     交通拥堵预测模型对比
                                 </Button>,
@@ -177,9 +195,10 @@ class PredictionAnalysis extends Component {
                         />
                     </Col>
                     <Col span={2}>
-                        <Select 
-                            defaultValue="lr" 
-                            style={{ width: '100%', display: this.state.sliderDisplay }} 
+                        <Select
+                            defaultValue="lr"
+                            style={{ width: '100%', display: this.state.sliderDisplay }}
+                            onChange={this.selectOnChange}
                         >
                             <Option value="lr">LR</Option>
                             <Option value="sage">SAGE</Option>
@@ -188,25 +207,25 @@ class PredictionAnalysis extends Component {
                 </Row>
                 <Row gutter={[16, 4]}>
                     <Col span={12} className="mapContainer">
-                        <EchartsMapBoxVis 
-                            mapContainerID="mapContainerLeft" 
-                            titleText = {this.state.titleTextLeft}
+                        <EchartsMapBoxVis
+                            mapContainerID="mapContainerLeft"
+                            titleText={this.state.titleTextLeft}
                             chartsParam={
-                                {mapParam: this.state.mapParam}
-                            } 
-                            data={this.state.dataType === 'history'? this.store.dataGt : this.store.dataPredLr} 
-                            asyncParam={this.asyncMapParam} 
+                                { mapParam: this.state.mapParam }
+                            }
+                            data={this.state.dataType === 'history' ? this.store.dataGt : this.store.dataPredLr}
+                            asyncParam={this.asyncMapParam}
                         />
                     </Col>
                     <Col span={12} className="mapContainer">
-                        <EchartsMapBoxVis 
-                            mapContainerID="mapContainerRight" 
-                            titleText = {this.state.titleTextRight}
+                        <EchartsMapBoxVis
+                            mapContainerID="mapContainerRight"
+                            titleText={this.state.titleTextRight}
                             chartsParam={
-                                {mapParam: this.state.mapParam}
-                            } 
-                            data={this.state.dataType === 'history'? this.store.dataPred : this.store.dataPredSage} 
-                            asyncParam={this.asyncMapParam} 
+                                { mapParam: this.state.mapParam }
+                            }
+                            data={this.state.dataType === 'history' ? this.store.dataPred : this.store.dataPredSage}
+                            asyncParam={this.asyncMapParam}
                         />
                     </Col>
                 </Row>
