@@ -147,6 +147,9 @@ class PredictionAnalysis extends Component {
             ...this.state,
             titleTextRight: '拥堵预测情况 ' + value + '模型',
             historyPredDataPath: predPath,
+        }, () => {
+            let pathPred = this.state.historyPredDataPath + this.DataGtNameList[this.state.dataListIndex]
+            this.store.loaddata(pathPred, 'pred')
         })
     }
 
