@@ -35,6 +35,7 @@ class EchartsMapBoxVis extends Component {
 
     componentDidMount() {
         // window.mapboxgl = mapboxgl;
+        this.showmapbox(this.props.data.data, this.props.data.datatime);
         window.onresize = () => {
             this.myChartGl.resize()
         }
