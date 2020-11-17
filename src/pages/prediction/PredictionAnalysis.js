@@ -55,8 +55,10 @@ class PredictionAnalysis extends Component {
         this.asyncMapParam = this.asyncMapParam.bind(this)
         this.historyPredict = this.historyPredict.bind(this)
         this.realTimePredice = this.realTimePredice.bind(this)
-        this.sliderOnChange = this.sliderOnChange.bind(this)
-        this.selectOnChange = this.selectOnChange.bind(this)
+        this.sliderOnChange_local = this.sliderOnChange_local.bind(this)
+        this.selectOnChange_local = this.selectOnChange_local.bind(this)
+        this.sliderOnChange_online = this.sliderOnChange_online.bind(this)
+        this.selectOnChange_online = this.selectOnChange_online.bind(this)
     }
 
     componentWillUnmount() {
@@ -122,7 +124,20 @@ class PredictionAnalysis extends Component {
     }
 
     // 改变slider的值
-    sliderOnChange(value) {
+    // 从public本地数据中加载预测的数据
+    sliderOnChange_local(value) {
+        this.setState({
+            ...this.state,
+            dataListIndex: value
+        }, () => {
+            let pathGt = './history_predictDataList/history_gt/' + this.DataGtNameList[value]
+            let pathPred = this.state.historyPredDataPath + this.DataGtNameList[value]
+            this.store.loaddata(pathGt, 'gt')
+            this.store.loaddata(pathPred, 'pred')
+        })
+    }
+    // 加载后台生成的模型预测数据
+    sliderOnChange_online(value) {
         this.setState({
             ...this.state,
             dataListIndex: value
@@ -134,7 +149,28 @@ class PredictionAnalysis extends Component {
         })
     }
 
-    selectOnChange(value) {
+    // 切换预测模型
+    // 从public本地数据中加载预测的数据
+    selectOnChange_local(value) {
+        let predPath = this.state.historyPredDataPath
+        if (value === 'lr') {
+            predPath = './history_predictDataList/history_pred/lr_pred/'
+        }
+        else if (value === 'sage') {
+            predPath = './history_predictDataList/history_pred/sage_pred/'
+        }
+
+        this.setState({
+            ...this.state,
+            titleTextRight: '拥堵预测情况 ' + value + '模型',
+            historyPredDataPath: predPath,
+        }, () => {
+            let pathPred = this.state.historyPredDataPath + this.DataGtNameList[this.state.dataListIndex]
+            this.store.loaddata(pathPred, 'pred')
+        })
+    }
+    // 加载后台生成的模型预测数据
+    selectOnChange_online(value) {
         let predPath = this.state.historyPredDataPath
         if (value === 'lr') {
             predPath = './history_predictDataList/history_pred/lr_pred/'
@@ -194,14 +230,14 @@ class PredictionAnalysis extends Component {
                             tooltipPlacement={'bottom'}
                             tooltipVisible={false}
                             style={{ display: this.state.sliderDisplay }}
-                            onChange={this.sliderOnChange}
+                            onChange={this.sliderOnChange_local}
                         />
                     </Col>
                     <Col span={2}>
                         <Select
                             defaultValue="lr"
                             style={{ width: '100%', display: this.state.sliderDisplay }}
-                            onChange={this.selectOnChange}
+                            onChange={this.selectOnChange_local}
                         >
                             <Option value="lr">LR</Option>
                             <Option value="sage">SAGE</Option>

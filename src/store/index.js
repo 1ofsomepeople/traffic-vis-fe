@@ -1,6 +1,8 @@
 import predictCompareStore from './predictCompareStore';
+import analysisStore from './analysisStore';
 
 const store = {
-    predictCompareStore
+    analysisStore,
+    predictCompareStore,
 }
 export default store;

@@ -12,7 +12,7 @@ import './Analysis.css'
 class Analysis extends Component {
     constructor(props) {
         super(props);
-        this.store = props.store.predictCompareStore
+        this.store = props.store.analysisStore
         this.state = {
             // 模拟数据
             data: {
@@ -170,6 +170,7 @@ class Analysis extends Component {
     }
     // 地图重置
     onClickBtn6() {
+        this.store.clearAll()
         this.setState({
             data: {
                 data: [],

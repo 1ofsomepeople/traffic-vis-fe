@@ -85,4 +85,27 @@ function debounce(fn, delay) {
     }
 }
 
-export {dataStr_dataObj, dataObj_dataStr, loadDataList, eqArr, throttle, debounce}
+
+// 处理json数据 1,3,7,10的值映射到150,175,200
+function processJsonData(data){
+    // 数据处理
+    for (let i = 0, len = data.length; i < len; i++) {
+        // 数据映射 1->1 3->150 7-175 10->200
+        switch (data[i][2]) {
+            case 3:
+                data[i][2] = 150;
+                break;
+            case 7:
+                data[i][2] = 175;
+                break;
+            case 10:
+                data[i][2] = 200;
+                break;
+            default:
+                break;
+        }
+    }
+    return data
+}
+
+export {dataStr_dataObj, dataObj_dataStr, loadDataList, eqArr, throttle, debounce, processJsonData}

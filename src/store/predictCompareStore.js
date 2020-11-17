@@ -1,6 +1,7 @@
 import {action, observable} from 'mobx';
 import {message} from 'antd';
 import request from '../common/service'
+import {processJsonData} from '../common/apis'
 
 class PredictCompareStore {
     // @observable historyGtDataList = [];
@@ -12,27 +13,6 @@ class PredictCompareStore {
      
     @observable dataPredLr = [];  // 预测数据 LR方法
     @observable dataPredSage = []; // 预测数据 Sage方法
-
-    processJsonData(data){
-        // 数据处理
-        for (let i = 0, len = data.length; i < len; i++) {
-            // 数据映射 1->1 3->150 7-175 10->200
-            switch (data[i][2]) {
-                case 3:
-                    data[i][2] = 150;
-                    break;
-                case 7:
-                    data[i][2] = 175;
-                    break;
-                case 10:
-                    data[i][2] = 200;
-                    break;
-                default:
-                    break;
-            }
-        }
-        return data
-    }
 
     // 加载数据
     @action async loaddata(jsonPath,type) {
@@ -48,7 +28,7 @@ class PredictCompareStore {
             message.warning('获取数据失败');
         }
         else {
-            resData = this.processJsonData(resData)
+            resData = processJsonData(resData)
             data.data = resData
             data.datatime = jsonPath.split('/')[jsonPath.split('/').length - 1].split('.')[0]
         }
@@ -61,27 +41,6 @@ class PredictCompareStore {
         }
         else{
             message.warning('loaddata param error');
-        }
-    }
-
-    // 加载实时拥堵数据
-    @action async getRealTimeData(param){
-        const res = await request.get('data')
-        // 初始化数据结构
-        let data = {
-            data: [],
-            datatime: ''
-        }
-        let resData = res.data
-        if(res === undefined){
-            message.error('数据 undefined')
-        }
-        else{
-            resData = this.processJsonData(resData)      
-            data.data = resData
-            data.datatime = res.jsonName
-            this.dataGt = data
-            console.log(res)
         }
     }
 
@@ -99,7 +58,7 @@ class PredictCompareStore {
             message.error('数据 undefined')
         }
         else{
-            resData = this.processJsonData(resData)      
+            resData = processJsonData(resData)      
             data.data = resData
             data.datatime = res.jsonName
             this.dataPredLr = data
@@ -119,7 +78,7 @@ class PredictCompareStore {
             message.error('数据 undefined')
         }
         else{
-            resData = this.processJsonData(resData)      
+            resData = processJsonData(resData)      
             data.data = resData
             data.datatime = res.jsonName
             this.dataPredSage = data
