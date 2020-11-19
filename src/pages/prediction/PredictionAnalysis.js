@@ -138,15 +138,17 @@ class PredictionAnalysis extends Component {
     }
     // 加载后台生成的模型预测数据
     sliderOnChange_online(value) {
-        this.setState({
-            ...this.state,
-            dataListIndex: value
-        }, () => {
-            let pathGt = './history_predictDataList/history_gt/' + this.DataGtNameList[value]
-            let pathPred = this.state.historyPredDataPath + this.DataGtNameList[value]
-            this.store.loaddata(pathGt, 'gt')
-            this.store.loaddata(pathPred, 'pred')
-        })
+        console.log(value)
+        this.store.loaddata()
+        // this.setState({
+        //     ...this.state,
+        //     dataListIndex: value
+        // }, () => {
+        //     let pathGt = './history_predictDataList/history_gt/' + this.DataGtNameList[value]
+        //     let pathPred = this.state.historyPredDataPath + this.DataGtNameList[value]
+        //     this.store.loaddata(pathGt, 'gt')
+        //     this.store.loaddata(pathPred, 'pred')
+        // })
     }
 
     // 切换预测模型

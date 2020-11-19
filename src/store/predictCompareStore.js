@@ -53,11 +53,11 @@ class PredictCompareStore {
             data: [],
             datatime: ''
         }
-        let resData = res.data
         if(res === undefined){
-            message.error('数据 undefined')
+            message.error('后端数据 undefined')
         }
         else{
+            let resData = res.data
             resData = processJsonData(resData)      
             data.data = resData
             data.datatime = res.jsonName
@@ -73,11 +73,11 @@ class PredictCompareStore {
             data: [],
             datatime: ''
         }
-        let resData = res.data
         if(res === undefined){
-            message.error('数据 undefined')
+            message.error('后端数据 undefined')
         }
         else{
+            let resData = res.data
             resData = processJsonData(resData)      
             data.data = resData
             data.datatime = res.jsonName

@@ -118,16 +118,16 @@ class BasicLayout extends Component {
                     <div className="logo" />
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline"
                     >
-                        <Menu.Item key="1" icon={<HomeOutlined />}>
+                        {/* <Menu.Item key="1" icon={<HomeOutlined />}>
                             <Link to="/">首页</Link>
-                        </Menu.Item>
+                        </Menu.Item> */}
                         <Menu.Item key="2" icon={<BorderOutlined />}>
                             <Link to="/analysis">可视分析</Link>
                         </Menu.Item>
                         <Menu.Item key="3" icon={<BlockOutlined />}>
                             <Link to="/prediction">预测分析</Link>
                         </Menu.Item>
-                        <Menu.Item key="4" icon={<TeamOutlined />}>
+                        {/* <Menu.Item key="4" icon={<TeamOutlined />}>
                             <Link to="/team">团队介绍</Link>
                         </Menu.Item>
                         <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
@@ -136,7 +136,7 @@ class BasicLayout extends Component {
                             </Menu.Item>
                             <Menu.Item key="8">Team 2</Menu.Item>
                         </SubMenu>
-                        <Menu.Item key="9" icon={<FileOutlined />} >others</Menu.Item>
+                        <Menu.Item key="9" icon={<FileOutlined />} >others</Menu.Item> */}
                     </Menu>
                 </Sider>
                 <Layout className="site-layout" style={{ marginLeft: 200 }}>

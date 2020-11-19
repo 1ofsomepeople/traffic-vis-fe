@@ -24,7 +24,7 @@ class AnalysisStore {
             datatime: ''
         }
         if(res === undefined){
-            message.error('数据 undefined')
+            message.error('后端数据 undefined')
         }
         else{
             let resData = res.data

@@ -25,8 +25,9 @@ class Analysis extends Component {
             },
             dataType:'history',
             chartsParam: {
-                titleText: "交通拥堵情况三维柱状图",
-            }
+                // titleText: "交通拥堵情况三维柱状图",
+            },
+            titleText: "",
         }
         this.DataNameList = null // 轮播的数据name list
         this.dataListIndex = 0 // 遍历数据list的index
@@ -79,6 +80,7 @@ class Analysis extends Component {
         this.setState({
             data: data,
             dataType:'history',
+            titleText: "交通拥堵情况三维柱状图",
         })
         return data
     }
@@ -123,6 +125,7 @@ class Analysis extends Component {
         this.setState({
             ...this.state,
             dataType: 'realtime',
+            titleText: "交通实时拥堵情况三维柱状图",
         })
     }
     // 局部展示
@@ -176,6 +179,7 @@ class Analysis extends Component {
                 data: [],
                 datatime: ''
             },
+            titleText: "",
             flyActionParam: [116.368608, 39.901744, 10, 60, -30, 1000]
         })
         clearInterval(this.intervalID);
@@ -243,6 +247,7 @@ class Analysis extends Component {
                             chartsParam={this.state.chartsParam} 
                             data={this.state.dataType === 'history'? this.state.data : this.store.dataGt} 
                             flyActionParam={this.state.flyActionParam} 
+                            titleText = {this.state.titleText}
                         />
                     </Col>
                 </Row>

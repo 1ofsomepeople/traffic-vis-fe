@@ -11,15 +11,16 @@ class EchartsMapBoxVis extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            titleText: this.props.chartsParam.titleText ? this.props.chartsParam.titleText : ' ',
+            // titleText: this.props.chartsParam.titleText ? this.props.chartsParam.titleText : ' ',
+            titleText: this.props.titleText,
             mapParam: this.props.chartsParam.mapParam ? this.props.chartsParam.mapParam : null,
         }
         this.myChartGl = null // echarts对象实例
         this.mapbox = null // mapbox对象实例
         window.mapboxgl = mapboxgl;
-        setTimeout(() => {
-            this.showmapbox(this.props.data.data, this.props.data.datatime);
-        })
+        // setTimeout(() => {
+        //     this.showmapbox(this.props.data.data, this.props.data.datatime);
+        // })
         this.asyncParam = {
             center: [116.368608, 39.901744],
             // Mapbox 地图的缩放等级
