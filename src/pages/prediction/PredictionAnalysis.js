@@ -44,8 +44,11 @@ class PredictionAnalysis extends Component {
             },
             sliderDisplay: 'none', //此状态为Slider的display的取值
             dataListIndex: 0, // 数据list的index
-            dataType: 'history',
             historyPredDataPath: './history_predictDataList/history_pred/lr_pred/', // 历史预测数据根路径
+
+            dataIndex: 0, // history数据的index值
+            predictType: 'lr', // history预测数据的预测模型类型
+
         }
 
         this.DataGtNameList = null // 真实数据的name list
@@ -53,7 +56,8 @@ class PredictionAnalysis extends Component {
 
 
         this.asyncMapParam = this.asyncMapParam.bind(this)
-        this.historyPredict = this.historyPredict.bind(this)
+        this.historyPredict_local = this.historyPredict_local.bind(this)
+        this.historyPredict_online = this.historyPredict_online.bind(this)
         this.realTimePredice = this.realTimePredice.bind(this)
         this.sliderOnChange_local = this.sliderOnChange_local.bind(this)
         this.selectOnChange_local = this.selectOnChange_local.bind(this)
@@ -74,8 +78,10 @@ class PredictionAnalysis extends Component {
         })
     }
 
-    historyPredict() {
 
+    // 可弃置
+    // 加载历史对比数据按钮点击事件 本地local数据 
+    historyPredict_local() {
         let startTimeStr = "2019-04-02_08-30"
         let endTimeStr = "2019-04-02_08-39"
         this.DataGtNameList = loadDataList(startTimeStr, endTimeStr)
@@ -102,29 +108,66 @@ class PredictionAnalysis extends Component {
             ...this.state,
             marks: sliderMarks,
             sliderDisplay: 'block',
-            dataType: 'history',
             titleTextLeft: "真实拥堵情况",
             titleTextRight: "拥堵预测情况 LR模型",
         })
-
-
     }
-    realTimePredice() {
-        // message.warning('正在开发中');
-        this.store.getPredLr()
-        this.store.getPredSage()
+
+    // 加载历史对比数据按钮点击事件 online数据 
+    historyPredict_online() {
+        let startTimeStr = "2019-04-02_08-30"
+        let endTimeStr = "2019-04-02_08-39"
+        this.DataGtNameList = loadDataList(startTimeStr, endTimeStr)
+        let sliderMarks = {}
+        for (let index = 0; index < this.DataGtNameList.length; index++) {
+            const element = this.DataGtNameList[index];
+            // sliderMarks[index] = element.split('.')[0]
+            sliderMarks[index] = {
+                style: {
+                    // color: '#1890ff',
+                    width: '120px'
+                },
+                label: <span>{element.split('.')[0].split('_')[1].split('-').join(':')}</span>
+            }
+        }
 
         this.setState({
             ...this.state,
+            marks: sliderMarks,
+            sliderDisplay: 'block',
+            titleTextLeft: "真实拥堵情况",
+            titleTextRight: "拥堵预测情况 LR模型",
+            dataIndex: 0, // history数据的index值
+            predictType: 'lr', // history预测数据的预测模型类型
+        }, () => {
+            let historyGtQueryParam = {
+                dataIndex: this.state.dataIndex,
+            }
+            let historyPredQueryParam = {
+                dataIndex: this.state.dataIndex,
+                predictType: this.state.predictType,
+            }
+            this.store.getHistoryGt(historyGtQueryParam);
+            this.store.getHistoryPred(historyPredQueryParam);
+        })
+
+    }
+
+    realTimePredice() {
+        // message.warning('正在开发中');
+        this.setState({
+            ...this.state,
             sliderDisplay: 'none',
-            dataType: 'realtime',
             titleTextLeft: "LR模型预测",
             titleTextRight: "SAGE模型预测",
+        }, () => {
+            this.store.getPredLr()
+            this.store.getPredSage()
         })
     }
 
     // 改变slider的值
-    // 从public本地数据中加载预测的数据
+    // 从public本地数据中加载预测的数据和真实数据
     sliderOnChange_local(value) {
         this.setState({
             ...this.state,
@@ -136,19 +179,23 @@ class PredictionAnalysis extends Component {
             this.store.loaddata(pathPred, 'pred')
         })
     }
-    // 加载后台生成的模型预测数据
+    // 加载后台生成的模型预测数据和真实数据
     sliderOnChange_online(value) {
-        console.log(value)
-        this.store.loaddata()
-        // this.setState({
-        //     ...this.state,
-        //     dataListIndex: value
-        // }, () => {
-        //     let pathGt = './history_predictDataList/history_gt/' + this.DataGtNameList[value]
-        //     let pathPred = this.state.historyPredDataPath + this.DataGtNameList[value]
-        //     this.store.loaddata(pathGt, 'gt')
-        //     this.store.loaddata(pathPred, 'pred')
-        // })
+        // console.log(value)
+        this.setState({
+            ...this.state,
+            dataIndex: value,
+        }, () => {
+            let historyGtQueryParam = {
+                dataIndex: this.state.dataIndex,
+            }
+            let historyPredQueryParam = {
+                dataIndex: this.state.dataIndex,
+                predictType: this.state.predictType,
+            }
+            this.store.getHistoryGt(historyGtQueryParam);
+            this.store.getHistoryPred(historyPredQueryParam);
+        })
     }
 
     // 切换预测模型
@@ -173,21 +220,17 @@ class PredictionAnalysis extends Component {
     }
     // 加载后台生成的模型预测数据
     selectOnChange_online(value) {
-        let predPath = this.state.historyPredDataPath
-        if (value === 'lr') {
-            predPath = './history_predictDataList/history_pred/lr_pred/'
-        }
-        else if (value === 'sage') {
-            predPath = './history_predictDataList/history_pred/sage_pred/'
-        }
-
+        // console.log(value)
         this.setState({
             ...this.state,
+            predictType: value,
             titleTextRight: '拥堵预测情况 ' + value + '模型',
-            historyPredDataPath: predPath,
         }, () => {
-            let pathPred = this.state.historyPredDataPath + this.DataGtNameList[this.state.dataListIndex]
-            this.store.loaddata(pathPred, 'pred')
+            let historyPredQueryParam = {
+                dataIndex: this.state.dataIndex,
+                predictType: this.state.predictType,
+            }
+            this.store.getHistoryPred(historyPredQueryParam);
         })
     }
 
@@ -205,7 +248,8 @@ class PredictionAnalysis extends Component {
                                 <Button
                                     key="1"
                                     type="primary"
-                                    onClick={this.historyPredict}
+                                    onClick={this.historyPredict_online}
+                                    loading={this.store.loading}
                                 >
                                     加载历史预测对比数据
                                 </Button>,
@@ -213,6 +257,7 @@ class PredictionAnalysis extends Component {
                                     key="2"
                                     type="primary"
                                     onClick={throttle(this.realTimePredice, 1000)}
+                                    loading={this.store.loading}
                                 >
                                     交通拥堵预测模型对比
                                 </Button>,
@@ -232,14 +277,16 @@ class PredictionAnalysis extends Component {
                             tooltipPlacement={'bottom'}
                             tooltipVisible={false}
                             style={{ display: this.state.sliderDisplay }}
-                            onChange={this.sliderOnChange_local}
+                            onChange={this.sliderOnChange_online}
+                            loading={this.store.loading}
                         />
                     </Col>
                     <Col span={2}>
                         <Select
                             defaultValue="lr"
                             style={{ width: '100%', display: this.state.sliderDisplay }}
-                            onChange={this.selectOnChange_local}
+                            onChange={this.selectOnChange_online}
+                            loading={this.store.loading}
                         >
                             <Option value="lr">LR</Option>
                             <Option value="sage">SAGE</Option>
@@ -254,7 +301,7 @@ class PredictionAnalysis extends Component {
                             chartsParam={
                                 { mapParam: this.state.mapParam }
                             }
-                            data={this.state.dataType === 'history' ? this.store.dataGt : this.store.dataPredLr}
+                            data={this.store.dataLeft}
                             asyncParam={this.asyncMapParam}
                         />
                     </Col>
@@ -265,7 +312,7 @@ class PredictionAnalysis extends Component {
                             chartsParam={
                                 { mapParam: this.state.mapParam }
                             }
-                            data={this.state.dataType === 'history' ? this.store.dataPred : this.store.dataPredSage}
+                            data={this.store.dataRight}
                             asyncParam={this.asyncMapParam}
                         />
                     </Col>

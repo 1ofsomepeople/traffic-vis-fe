@@ -5,19 +5,14 @@ import {processJsonData} from '../common/apis'
 
 
 class AnalysisStore {
-    // @observable historyGtDataList = [];
-    @observable dataGt = []; // 历史真实数据
-    @observable dataPred = []; // 历史预测数据
-
-    // @observable dataGtRTName = ''; // 实时数据名
-    @observable dataGtRT = []; // 实时数据
-     
-    @observable dataPredLr = [];  // 预测数据 LR方法
-    @observable dataPredSage = []; // 预测数据 Sage方法
+    @observable dataGt = []; // 实时的真实数据
+    @observable loading = false; // loading状态
 
     // 加载实时拥堵数据
     @action async getRealTimeData(param){
+        this.loading = true
         const res = await request.get('data')
+        this.loading = false
         // 初始化数据结构
         let data = {
             data: [],
@@ -39,11 +34,6 @@ class AnalysisStore {
     // 清理数据 
     @action async clearAll(){
         this.dataGt = [];
-        this.dataPred = [];
-        // this.dataGtRTName = ''; // 实时数据名
-        this.dataGtRT = []; // 实时数据
-        this.dataPredLr = [];  // 预测数据 LR方法
-        this.dataPredSage = []; // 预测数据 Sage方法
     }
 }
 

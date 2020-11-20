@@ -23,7 +23,7 @@ class Analysis extends Component {
                 ],
                 datatime: ''
             },
-            dataType:'history',
+            dataType: 'history',
             chartsParam: {
                 // titleText: "交通拥堵情况三维柱状图",
             },
@@ -79,7 +79,7 @@ class Analysis extends Component {
         }
         this.setState({
             data: data,
-            dataType:'history',
+            dataType: 'history',
             titleText: "交通拥堵情况三维柱状图",
         })
         return data
@@ -115,7 +115,7 @@ class Analysis extends Component {
 
             let startTimeStr = "2019-04-02_08-30"
             let endTimeStr = "2019-04-02_09-30"
-            this.DataNameList = loadDataList(startTimeStr,endTimeStr)
+            this.DataNameList = loadDataList(startTimeStr, endTimeStr)
             this.intervalPlay(this.DataNameList)
         }
     }
@@ -212,42 +212,50 @@ class Analysis extends Component {
                                 <Button
                                     key="1"
                                     type="primary"
-                                    onClick={this.onClickBtn1}>测试数据</Button>,
+                                    onClick={this.onClickBtn1}
+                                    loading={this.store.loading}
+                                >测试数据</Button>,
                                 <Button
                                     key="2"
                                     type="primary"
                                     onClick={debounce(this.onClickBtn2, 500)}
+                                    loading={this.store.loading}
                                 >数据轮播</Button>,
-                                <Button 
-                                    key="3" 
-                                    type="primary" 
+                                <Button
+                                    key="3"
+                                    type="primary"
                                     onClick={debounce(this.onClickBtn3, 500)}
+                                    loading={this.store.loading}
                                 >实时交通</Button>,
                                 <Button
                                     key="4"
                                     type="primary"
                                     onClick={debounce(this.onClickBtn4, 500)}
+                                    loading={this.store.loading}
                                 >局部演示</Button>,
                                 <Button
                                     key="5"
                                     type="primary"
                                     onClick={debounce(this.onClickBtn5, 500)}
+                                    loading={this.store.loading}
                                 >全局演示</Button>,
                                 <Button
                                     key="6"
-                                    onClick={this.onClickBtn6}>地图重置</Button>,
+                                    onClick={this.onClickBtn6}
+                                    loading={this.store.loading}
+                                >地图重置</Button>,
                             ]}
                         />
                     </Col>
                 </Row>
                 <Row gutter={[16, 4]}>
                     <Col span={24} className="mapContainer">
-                        <EchartsMapBoxVis 
-                            mapContainerID="mapContainer" 
-                            chartsParam={this.state.chartsParam} 
-                            data={this.state.dataType === 'history'? this.state.data : this.store.dataGt} 
-                            flyActionParam={this.state.flyActionParam} 
-                            titleText = {this.state.titleText}
+                        <EchartsMapBoxVis
+                            mapContainerID="mapContainer"
+                            chartsParam={this.state.chartsParam}
+                            data={this.state.dataType === 'history' ? this.state.data : this.store.dataGt}
+                            flyActionParam={this.state.flyActionParam}
+                            titleText={this.state.titleText}
                         />
                     </Col>
                 </Row>

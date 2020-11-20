@@ -1,20 +1,17 @@
 import {action, observable} from 'mobx';
 import {message} from 'antd';
 import request from '../common/service'
+import qs from 'qs';
 import {processJsonData} from '../common/apis'
 
 class PredictCompareStore {
-    // @observable historyGtDataList = [];
-    @observable dataGt = []; // 历史真实数据
-    @observable dataPred = []; // 历史预测数据
 
-    // @observable dataGtRTName = ''; // 实时数据名
-    @observable dataGtRT = []; // 实时数据
-     
-    @observable dataPredLr = [];  // 预测数据 LR方法
-    @observable dataPredSage = []; // 预测数据 Sage方法
-
-    // 加载数据
+    @observable dataLeft = []; // 左边地图数据
+    @observable dataRight = []; // 右边地图的数据
+    @observable loading = false; // loading状态
+    
+    // 可弃置
+    // 根据本地json数据的路径加载history的gt和pred数据 
     @action async loaddata(jsonPath,type) {
         // 初始化数据结构
         let data = {
@@ -34,20 +31,66 @@ class PredictCompareStore {
         }
         
         if(type === 'gt'){
-            this.dataGt = data
+            this.dataLeft = data
         }
         else if(type === 'pred'){
-            this.dataPred = data
+            this.dataRight = data
         }
         else{
             message.warning('loaddata param error');
         }
     }
 
-    // 加载拥堵预测数据
+    // 加载history的拥堵GroundTruth数据
+    @action async getHistoryGt(param){
+        this.loading = true;
+        const res = await request.get('data/history/gt' + '?' + qs.stringify(param))
+        this.loading = false;
+        if(res === undefined){
+            message.error('后端数据 undefined')
+        }
+        else{
+            let data = {
+                data: [],
+                datatime: ''
+            } 
+            let resData = res.data
+            resData = processJsonData(resData) 
+            data.data = resData
+            data.datatime = res.jsonName
+            this.dataLeft = data
+            console.log(res)
+        }
+
+    }
+    // 加载history的拥堵预测数据
+    @action async getHistoryPred(param){
+        this.loading = true;
+        const res = await request.get('data/history/pred' + '?' + qs.stringify(param))
+        this.loading = false;
+        if(res === undefined){
+            message.error('后端数据 undefined')
+        }
+        else{
+            let data = {
+                data: [],
+                datatime: ''
+            } 
+            let resData = res.data
+            resData = processJsonData(resData) 
+            data.data = resData
+            data.datatime = res.jsonName
+            this.dataRight = data
+            console.log(res)
+        }
+    }
+    
+    // 加载实时的拥堵预测数据
     // Lr方法
     @action async getPredLr(param){
+        this.loading = true;
         const res = await request.get('data/predict/lr')
+        this.loading = false;
         // 初始化数据结构
         let data = {
             data: [],
@@ -61,13 +104,15 @@ class PredictCompareStore {
             resData = processJsonData(resData)      
             data.data = resData
             data.datatime = res.jsonName
-            this.dataPredLr = data
+            this.dataLeft = data
             console.log(res)
         }
     }
     // Sage方法
     @action async getPredSage(param){
+        this.loading = true;
         const res = await request.get('data/predict/sage')
+        this.loading = false;
         // 初始化数据结构
         let data = {
             data: [],
@@ -81,19 +126,15 @@ class PredictCompareStore {
             resData = processJsonData(resData)      
             data.data = resData
             data.datatime = res.jsonName
-            this.dataPredSage = data
+            this.dataRight = data
             console.log(res)
         }
     }
 
     // 清理数据 
     @action async clearAll(){
-        this.dataGt = [];
-        this.dataPred = [];
-        // this.dataGtRTName = ''; // 实时数据名
-        this.dataGtRT = []; // 实时数据
-        this.dataPredLr = [];  // 预测数据 LR方法
-        this.dataPredSage = []; // 预测数据 Sage方法
+        this.dataLeft = []; // 左边地图数据
+        this.dataRight = []; // 右边地图的数据
     }
 }
 
