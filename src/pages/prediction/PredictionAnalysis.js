@@ -278,7 +278,7 @@ class PredictionAnalysis extends Component {
                             tooltipVisible={false}
                             style={{ display: this.state.sliderDisplay }}
                             onChange={this.sliderOnChange_online}
-                            loading={this.store.loading}
+                            disabled={this.store.loading}
                         />
                     </Col>
                     <Col span={2}>
@@ -287,6 +287,7 @@ class PredictionAnalysis extends Component {
                             style={{ width: '100%', display: this.state.sliderDisplay }}
                             onChange={this.selectOnChange_online}
                             loading={this.store.loading}
+                            disabled={this.store.loading}
                         >
                             <Option value="lr">LR</Option>
                             <Option value="sage">SAGE</Option>
