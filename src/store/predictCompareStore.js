@@ -9,6 +9,10 @@ class PredictCompareStore {
     @observable dataLeft = []; // 左边地图数据
     @observable dataRight = []; // 右边地图的数据
     @observable loading = false; // loading状态
+
+    @observable scorePrecision = 0;
+    @observable scoreMAE = 0;
+    @observable scoreMAPE = 0;
     
     // 可弃置
     // 根据本地json数据的路径加载history的gt和pred数据 
@@ -81,6 +85,9 @@ class PredictCompareStore {
             data.data = resData
             data.datatime = res.jsonName
             this.dataRight = data
+            this.scorePrecision = res.scorePrecision
+            this.scoreMAE = res.scoreMAE
+            this.scoreMAPE = res.scoreMAPE
             console.log(res)
         }
     }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, PageHeader, message, Slider, Select } from 'antd';
+import { Row, Col, Button, PageHeader, message, Slider, Select, Descriptions, Popover } from 'antd';
 import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 import MapBoxPointsVis from '../../common/MapBoxPointsVis'
 import { dataStr_dataObj, dataObj_dataStr, loadDataList, throttle, debounce } from '../../common/apis';
@@ -266,7 +266,7 @@ class PredictionAnalysis extends Component {
                     </Col>
                 </Row>
                 <Row align={"middle"} justify={"center"} gutter={[24, 4]}>
-                    <Col span={20} >
+                    <Col span={16} >
                         <Slider
                             min={0}
                             max={this.DataGtNameList ? this.DataGtNameList.length - 1 : 0}
@@ -293,8 +293,65 @@ class PredictionAnalysis extends Component {
                             <Option value="sage">SAGE</Option>
                         </Select>
                     </Col>
+                    <Col span={6} className="PredInfo">
+                        <Descriptions
+                            // title="预测算法信息"
+                            layout="vertical"
+                            bordered={true}
+                            column={4}
+                            size="small"
+                            style={{ display: this.state.sliderDisplay }}
+                        >
+                            <Descriptions.Item
+                                label="算法模型"
+                            >
+                                {this.state.predictType}
+                            </Descriptions.Item>
+                            <Descriptions.Item
+                                label={
+                                    <Popover content={
+                                        <div>
+                                            <p>预测正确节点数占总数的比例</p>
+                                        </div>
+                                    }>
+                                        准确率
+                                    </Popover>
+                                }
+                            >
+                                {this.store.scorePrecision + '%'}
+                            </Descriptions.Item>
+                            <Descriptions.Item
+                                label={
+                                    <Popover content={
+                                        <div>
+                                            <p>平均绝对误差</p>
+                                        </div>
+                                    }>
+                                        MAE
+                                    </Popover>
+                                }
+                            >
+                                {this.store.scoreMAE}
+                            </Descriptions.Item>
+                            <Descriptions.Item
+                                label={
+                                    <Popover content={
+                                        <div>
+                                            <p>平均绝对百分比误差</p>
+                                        </div>
+                                    }>
+                                        MAPE
+                                    </Popover>
+                                }
+                            >
+                                {this.store.scoreMAPE + '%'}
+                            </Descriptions.Item>
+                        </Descriptions>
+                    </Col>
                 </Row>
-                <Row gutter={[16, 4]}>
+                <Row
+                    gutter={[16, 4]}
+                >
                     <Col span={12} className="mapContainer">
                         <EchartsMapBoxVis
                             mapContainerID="mapContainerLeft"
