@@ -271,6 +271,7 @@ class PredictionAnalysis extends Component {
                             min={0}
                             max={this.DataGtNameList ? this.DataGtNameList.length - 1 : 0}
                             marks={this.state.marks}
+                            value={this.state.dataIndex}
                             included={false}
                             step={null}
                             defaultValue={0}
@@ -326,6 +327,7 @@ class PredictionAnalysis extends Component {
                                             <p>通畅准确率：{this.store.precisionClear+ '%'}</p>
                                             <p>缓行准确率：{this.store.precisionSlow + '%'}</p>
                                             <p>拥堵准确率：{this.store.precisionJam + '%'}</p>
+                                            <p>非通畅准确率：{this.store.precisionSlowJam+ '%'}</p>
                                         </div>
                                     }>
                                         拥堵准确率
