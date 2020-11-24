@@ -281,31 +281,29 @@ class PredictionAnalysis extends Component {
                             disabled={this.store.loading}
                         />
                     </Col>
-                    <Col span={2}>
-                        <Select
-                            defaultValue="lr"
-                            style={{ width: '100%', display: this.state.sliderDisplay }}
-                            onChange={this.selectOnChange_online}
-                            loading={this.store.loading}
-                            disabled={this.store.loading}
-                        >
-                            <Option value="lr">LR</Option>
-                            <Option value="sage">SAGE</Option>
-                        </Select>
-                    </Col>
-                    <Col span={6} className="PredInfo">
+                    <Col span={8} className="PredInfo">
                         <Descriptions
                             // title="预测算法信息"
                             layout="vertical"
                             bordered={true}
-                            column={4}
+                            column={5}
                             size="small"
                             style={{ display: this.state.sliderDisplay }}
                         >
                             <Descriptions.Item
                                 label="算法模型"
                             >
-                                {this.state.predictType}
+                                {/* {this.state.predictType} */}
+                                <Select
+                                    defaultValue="lr"
+                                    style={{ width: '100%', display: this.state.sliderDisplay }}
+                                    onChange={this.selectOnChange_online}
+                                    loading={this.store.loading}
+                                    disabled={this.store.loading}
+                                >
+                                    <Option value="lr">LR</Option>
+                                    <Option value="sage">SAGE</Option>
+                                </Select>
                             </Descriptions.Item>
                             <Descriptions.Item
                                 label={
@@ -324,6 +322,22 @@ class PredictionAnalysis extends Component {
                                 label={
                                     <Popover content={
                                         <div>
+                                            <p>各类别准确率：</p>
+                                            <p>通畅准确率：{this.store.precisionClear+ '%'}</p>
+                                            <p>缓行准确率：{this.store.precisionSlow + '%'}</p>
+                                            <p>拥堵准确率：{this.store.precisionJam + '%'}</p>
+                                        </div>
+                                    }>
+                                        拥堵准确率
+                                    </Popover>
+                                }
+                            >
+                                {this.store.precisionJam + '%'}
+                            </Descriptions.Item>
+                            <Descriptions.Item
+                                label={
+                                    <Popover content={
+                                        <div>
                                             <p>平均绝对误差</p>
                                         </div>
                                     }>
@@ -333,6 +347,7 @@ class PredictionAnalysis extends Component {
                             >
                                 {this.store.scoreMAE}
                             </Descriptions.Item>
+
                             <Descriptions.Item
                                 label={
                                     <Popover content={
@@ -346,6 +361,7 @@ class PredictionAnalysis extends Component {
                             >
                                 {this.store.scoreMAPE + '%'}
                             </Descriptions.Item>
+                            
                         </Descriptions>
                     </Col>
                 </Row>

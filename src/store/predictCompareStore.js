@@ -10,9 +10,13 @@ class PredictCompareStore {
     @observable dataRight = []; // 右边地图的数据
     @observable loading = false; // loading状态
 
-    @observable scorePrecision = 0;
-    @observable scoreMAE = 0;
-    @observable scoreMAPE = 0;
+    @observable scorePrecision = 0; // 准确率
+    @observable scoreMAE = 0; // 平均绝对误差
+    @observable scoreMAPE = 0; // 平均绝对百分比误差
+    @observable precisionClear = 0; // 通畅准确率
+    @observable precisionSlow = 0; // 缓行准确率
+    @observable precisionJam = 0; // 拥堵准确率
+    @observable precisionSlowJam = 0; // 缓行和拥堵的准确率
     
     // 可弃置
     // 根据本地json数据的路径加载history的gt和pred数据 
@@ -88,6 +92,10 @@ class PredictCompareStore {
             this.scorePrecision = res.scorePrecision
             this.scoreMAE = res.scoreMAE
             this.scoreMAPE = res.scoreMAPE
+            this.precisionClear = res.precisionClear
+            this.precisionSlow = res.precisionSlow
+            this.precisionJam = res.precisionJam
+            this.precisionSlowJam = res.precisionSlowJam
             console.log(res)
         }
     }
