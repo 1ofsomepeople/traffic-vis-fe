@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, PageHeader, message } from 'antd';
+import { Row, Col, Button, PageHeader, message, Statistic, Progress, Card } from 'antd';
+import { ArrowUpOutlined, ArrowDownOutlined, AlertOutlined } from '@ant-design/icons';
 import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 import { dataStr_dataObj, dataObj_dataStr, loadDataList, throttle, debounce } from '../../common/apis';
 import { inject, observer } from 'mobx-react';
@@ -7,6 +8,8 @@ import echarts from 'echarts';
 
 import './Analysis.css'
 import Pie from '../../common/basicCharts/Pie';
+import Line from '../../common/basicCharts/Line';
+import JamScoreDash from '../../common/basicCharts/JamScoreDash';
 
 
 @inject('store')
@@ -195,6 +198,8 @@ class Analysis extends Component {
         window.onresize = function () {
             echarts.init(document.getElementById("mapContainer")).resize();
             echarts.init(document.getElementById("pie1")).resize();
+            echarts.init(document.getElementById("line1")).resize();
+            echarts.init(document.getElementById("dash1")).resize();
         };
     };
 
@@ -259,7 +264,7 @@ class Analysis extends Component {
                     </Col>
                 </Row>
                 <Row gutter={[16, 4]} >
-                    <Col span={18} className="mapContainer">
+                    <Col span={16} className="mapContainer">
                         <EchartsMapBoxVis
                             mapContainerID="mapContainer"
                             chartsParam={this.state.chartsParam}
@@ -268,8 +273,18 @@ class Analysis extends Component {
                             titleText={this.state.titleText}
                         />
                     </Col>
-                    <Col span={6} >
-                        <Pie chartsPieID="pie1" />
+                    <Col span={8} >
+                        <Row gutter={[16, 4]}>
+                            <Col span={8}>
+                                <JamScoreDash chartsDashID="dash1" />
+                            </Col >
+                            <Col span={16}>
+                                <Pie chartsPieID="pie1" />
+                            </Col>
+                        </Row>
+                        <Row gutter={[16, 4]}>
+                            <Line chartsLineID="line1" />
+                        </Row>
                     </Col>
 
                 </Row>

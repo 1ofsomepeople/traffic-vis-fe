@@ -22,23 +22,22 @@ class Pie extends Component {
         let initOption = {
             title: {
                 text: '拥堵占比',
-                left: 'top'
+                left: 'top', // title 组件离容器左侧的距离。
             },
             tooltip: {
                 trigger: 'item',
                 formatter: '{a} <br/>{b} : {c} ({d}%)'
             },
+            
             series: [
                 {
                     name: '访问来源',
                     type: 'pie',
-                    radius: '55%',
+                    radius: '70%',
                     center: ['50%', '50%'],
                     data: [
                         { value: 335, name: '直接访问' },
                         { value: 310, name: '邮件营销' },
-                        { value: 234, name: '联盟广告' },
-                        { value: 135, name: '视频广告' },
                         { value: 1548, name: '搜索引擎' }
                     ],
                     emphasis: {
@@ -69,7 +68,7 @@ class Pie extends Component {
 
     render() {
         return (
-            <div id={this.props.chartsPieID} style={{ minHeight: "100px", height: "100%", width: "100%" }} />
+            <div id={this.props.chartsPieID} style={{ minHeight: "200px", height: "100%", width: "100%" }} />
         );
     }
 }
