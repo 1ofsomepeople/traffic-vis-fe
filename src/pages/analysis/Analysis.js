@@ -3,8 +3,10 @@ import { Row, Col, Button, PageHeader, message } from 'antd';
 import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 import { dataStr_dataObj, dataObj_dataStr, loadDataList, throttle, debounce } from '../../common/apis';
 import { inject, observer } from 'mobx-react';
+import echarts from 'echarts';
 
 import './Analysis.css'
+import Pie from '../../common/basicCharts/Pie';
 
 
 @inject('store')
@@ -190,6 +192,13 @@ class Analysis extends Component {
         this.dataListIndex = 0
     }
     componentDidMount() {
+        window.onresize = function () {
+            echarts.init(document.getElementById("mapContainer")).resize();
+            echarts.init(document.getElementById("pie1")).resize();
+        };
+    };
+
+    componentDidUpdate() {
 
     };
 
@@ -199,8 +208,9 @@ class Analysis extends Component {
     }
 
     render() {
+
         return (
-            <div>
+            <div id='analysisLayout'>
                 <Row gutter={[16, 0]}>
                     <Col span={24}>
                         <PageHeader
@@ -248,8 +258,8 @@ class Analysis extends Component {
                         />
                     </Col>
                 </Row>
-                <Row gutter={[16, 4]}>
-                    <Col span={24} className="mapContainer">
+                <Row gutter={[16, 4]} >
+                    <Col span={18} className="mapContainer">
                         <EchartsMapBoxVis
                             mapContainerID="mapContainer"
                             chartsParam={this.state.chartsParam}
@@ -258,6 +268,10 @@ class Analysis extends Component {
                             titleText={this.state.titleText}
                         />
                     </Col>
+                    <Col span={6} >
+                        <Pie chartsPieID="pie1" />
+                    </Col>
+
                 </Row>
             </div>
         );

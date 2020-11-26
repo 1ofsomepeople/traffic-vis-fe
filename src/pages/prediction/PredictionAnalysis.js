@@ -5,6 +5,7 @@ import MapBoxPointsVis from '../../common/MapBoxPointsVis'
 import { dataStr_dataObj, dataObj_dataStr, loadDataList, throttle, debounce } from '../../common/apis';
 import './PredictionAnalysis.css';
 import { inject, observer } from 'mobx-react';
+import echarts from 'echarts';
 // import {predictCompareStore} from "../../store/index";
 const { Option } = Select;
 @inject('store')
@@ -65,6 +66,12 @@ class PredictionAnalysis extends Component {
         this.selectOnChange_online = this.selectOnChange_online.bind(this)
     }
 
+    componentDidMount() {
+        window.onresize = () => {
+            echarts.init(document.getElementById("mapContainerLeft")).resize();
+            echarts.init(document.getElementById("mapContainerRight")).resize();
+        };
+    }
     componentWillUnmount() {
         console.log('PredictionAnalysis Destory')
         this.store.clearAll()

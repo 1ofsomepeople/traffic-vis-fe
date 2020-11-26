@@ -108,6 +108,7 @@ class BasicLayout extends Component {
                     // collapsible
                     // collapsed={this.state.collapsed}
                     // onCollapse={this.onCollapse}
+                    width={150}
                     style={{
                         overflow: 'auto',
                         height: '100vh',
@@ -135,11 +136,11 @@ class BasicLayout extends Component {
                                 <Link to="/team/1">Team 1</Link>
                             </Menu.Item>
                             <Menu.Item key="8">Team 2</Menu.Item>
-                        </SubMenu>
-                        <Menu.Item key="9" icon={<FileOutlined />} >others</Menu.Item> */}
+                        </SubMenu> */}
+                        <Menu.Item key="9" icon={<FileOutlined />} >others</Menu.Item>
                     </Menu>
                 </Sider>
-                <Layout className="site-layout" style={{ marginLeft: 200 }}>
+                <Layout className="site-layout" style={{ marginLeft: 150 }}>
                     <Header className="site-layout-background header-title" style={{ padding: 0 }} >交通数据可视化分析系统</Header>
                     <Content style={{ margin: '0 16px', overflow: 'initial' }}>
                         <Breadcrumb style={{ margin: '16px 0' }}>
