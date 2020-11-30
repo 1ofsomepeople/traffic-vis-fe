@@ -33,6 +33,7 @@ class Analysis extends Component {
                 // titleText: "交通拥堵情况三维柱状图",
             },
             titleText: "",
+            extraChartsShow: false, // 额外图表的显示情况
         }
         this.DataNameList = null // 轮播的数据name list
         this.dataListIndex = 0 // 遍历数据list的index
@@ -45,6 +46,7 @@ class Analysis extends Component {
         this.onClickBtn4 = this.onClickBtn4.bind(this)
         this.onClickBtn5 = this.onClickBtn5.bind(this)
         this.onClickBtn6 = this.onClickBtn6.bind(this)
+        this.resizeAllCharts = this.resizeAllCharts.bind(this)
     };
 
     // 加载数据
@@ -102,6 +104,12 @@ class Analysis extends Component {
     // 加载测试数据
     onClickBtn1() {
         this.loaddata("./2019-04-02_09-00.json")
+        this.setState({
+            ...this.state,
+            extraChartsShow: true,
+        }, () => {
+            this.resizeAllCharts()
+        })
     }
     // 数据轮播
     onClickBtn2() {
@@ -124,6 +132,7 @@ class Analysis extends Component {
             this.intervalPlay(this.DataNameList)
         }
     }
+    // 加载实时交通数据
     onClickBtn3() {
         // message.warning('正在开发中');
         this.store.getRealTimeData()
@@ -131,6 +140,9 @@ class Analysis extends Component {
             ...this.state,
             dataType: 'realtime',
             titleText: "交通实时拥堵情况三维柱状图",
+            extraChartsShow: false,
+        }, () => {
+            this.resizeAllCharts()
         })
     }
     // 局部展示
@@ -185,7 +197,10 @@ class Analysis extends Component {
                 datatime: ''
             },
             titleText: "",
-            flyActionParam: [116.368608, 39.901744, 10, 60, -30, 1000]
+            flyActionParam: [116.368608, 39.901744, 10, 60, -30, 1000],
+            extraChartsShow: false,
+        }, () => {
+            this.resizeAllCharts()
         })
         clearInterval(this.intervalID);
         clearTimeout(this.timeoutID)
@@ -194,13 +209,16 @@ class Analysis extends Component {
         this.DataNameList = null
         this.dataListIndex = 0
     }
+
+    // 调整charts大小
+    resizeAllCharts() {
+        echarts.init(document.getElementById("mapContainer")).resize();
+        echarts.init(document.getElementById("pie1")).resize();
+        echarts.init(document.getElementById("line1")).resize();
+        echarts.init(document.getElementById("dash1")).resize();
+    }
     componentDidMount() {
-        window.onresize = function () {
-            echarts.init(document.getElementById("mapContainer")).resize();
-            echarts.init(document.getElementById("pie1")).resize();
-            echarts.init(document.getElementById("line1")).resize();
-            echarts.init(document.getElementById("dash1")).resize();
-        };
+        window.onresize = this.resizeAllCharts
     };
 
     componentDidUpdate() {
@@ -264,7 +282,7 @@ class Analysis extends Component {
                     </Col>
                 </Row>
                 <Row gutter={[16, 4]} >
-                    <Col span={16} className="mapContainer">
+                    <Col span={this.state.extraChartsShow ? 16 : 24} className="mapContainer">
                         <EchartsMapBoxVis
                             mapContainerID="mapContainer"
                             chartsParam={this.state.chartsParam}
@@ -273,7 +291,7 @@ class Analysis extends Component {
                             titleText={this.state.titleText}
                         />
                     </Col>
-                    <Col span={8} >
+                    <Col span={this.state.extraChartsShow ? 8 : 0} >
                         <Row gutter={[16, 4]}>
                             <Col span={8}>
                                 <JamScoreDash chartsDashID="dash1" />

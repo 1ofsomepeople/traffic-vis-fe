@@ -31,14 +31,14 @@ class Pie extends Component {
             
             series: [
                 {
-                    name: '访问来源',
+                    name: '拥堵比例',
                     type: 'pie',
                     radius: '70%',
                     center: ['50%', '50%'],
                     data: [
-                        { value: 335, name: '直接访问' },
-                        { value: 310, name: '邮件营销' },
-                        { value: 1548, name: '搜索引擎' }
+                        { value: 335, name: '拥堵' },
+                        { value: 310, name: '缓行' },
+                        { value: 1548, name: '畅通' }
                     ],
                     emphasis: {
                         itemStyle: {
