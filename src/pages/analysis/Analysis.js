@@ -5,6 +5,8 @@ import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 import { dataStr_dataObj, dataObj_dataStr, loadDataList, throttle, debounce } from '../../common/apis';
 import { inject, observer } from 'mobx-react';
 import echarts from 'echarts';
+import mapboxgl from 'mapbox-gl';
+
 
 import './Analysis.css'
 import Pie from '../../common/basicCharts/Pie';
@@ -38,6 +40,10 @@ class Analysis extends Component {
         this.DataNameList = null // 轮播的数据name list
         this.dataListIndex = 0 // 遍历数据list的index
         this.isplaying = false // 数据是否正在轮播
+
+        this.mapRef = React.createRef(); // ref
+        // window.mapboxgl = mapboxgl;
+        
 
         this.loaddata = this.loaddata.bind(this)
         this.onClickBtn1 = this.onClickBtn1.bind(this)
@@ -212,17 +218,22 @@ class Analysis extends Component {
 
     // 调整charts大小
     resizeAllCharts() {
-        echarts.init(document.getElementById("mapContainer")).resize();
+        this.echartsMapContainer = echarts.init(document.getElementById("mapContainer"))
+        this.echartsMapContainer.resize();
         echarts.init(document.getElementById("pie1")).resize();
         echarts.init(document.getElementById("line1")).resize();
         echarts.init(document.getElementById("dash1")).resize();
     }
     componentDidMount() {
         window.onresize = this.resizeAllCharts
+        // 获取mapbox对象实例
+        // this.mapbox = this.echartsMapContainer.getModel().getComponent('mapbox3D').getMapbox();
+        // this.mapbox = this.mapRef.current.mapbox
+        // this.mapRef.current.mapbox.setStyle('mapbox://styles/mapbox/dark-v10')
     };
 
     componentDidUpdate() {
-
+        
     };
 
     componentWillUnmount() {
@@ -289,6 +300,7 @@ class Analysis extends Component {
                             data={this.state.dataType === 'history' ? this.state.data : this.store.dataGt}
                             flyActionParam={this.state.flyActionParam}
                             titleText={this.state.titleText}
+                            ref={this.mapRef}
                         />
                     </Col>
                     <Col span={this.state.extraChartsShow ? 8 : 0} >
