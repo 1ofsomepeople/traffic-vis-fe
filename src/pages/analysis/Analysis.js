@@ -6,7 +6,7 @@ import { dataStr_dataObj, dataObj_dataStr, loadDataList, throttle, debounce } fr
 import { inject, observer } from 'mobx-react';
 import echarts from 'echarts';
 import mapboxgl from 'mapbox-gl';
-
+import * as d3 from 'd3';
 
 import './Analysis.css'
 import Pie from '../../common/basicCharts/Pie';
@@ -43,7 +43,7 @@ class Analysis extends Component {
 
         this.mapRef = React.createRef(); // ref
         // window.mapboxgl = mapboxgl;
-        
+
 
         this.loaddata = this.loaddata.bind(this)
         this.onClickBtn1 = this.onClickBtn1.bind(this)
@@ -52,6 +52,7 @@ class Analysis extends Component {
         this.onClickBtn4 = this.onClickBtn4.bind(this)
         this.onClickBtn5 = this.onClickBtn5.bind(this)
         this.onClickBtn6 = this.onClickBtn6.bind(this)
+        this.onClickBtn7 = this.onClickBtn7.bind(this)
         this.resizeAllCharts = this.resizeAllCharts.bind(this)
     };
 
@@ -215,6 +216,73 @@ class Analysis extends Component {
         this.DataNameList = null
         this.dataListIndex = 0
     }
+    onClickBtn7() {
+
+        let map = this.mapRef.current.mapbox
+
+        this.onClickBtn6()
+
+        let geojson = {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "coordinates": [
+                        [116.326534, 39.993866],
+                        [116.326624, 39.991366],
+                        [116.327014, 39.984196],
+                        [116.327145, 39.981355],
+                        [116.327225, 39.979745],
+                        [116.327455, 39.974735],
+                        [116.327635, 39.971525]
+                    ],
+                    "type": "LineString"
+                }
+            }]
+        };
+
+        // setup the viewport
+        map.jumpTo({
+            'center': geojson.features[0].geometry.coordinates[geojson.features[0].geometry.coordinates.length >> 1],
+            'zoom': 13,
+            'pitch': 0,
+            'bearing': 0,
+        });
+        map.addSource('line', {
+            type: 'geojson',
+            lineMetrics: true,
+            data: geojson
+        });
+        // the layer must be of type 'line'
+        map.addLayer({
+            type: 'line',
+            source: 'line',
+            id: 'line',
+            paint: {
+                'line-color': 'red',
+                'line-width': 12,
+                // 'line-gradient' must be specified using an expression
+                // with the special 'line-progress' property
+                'line-gradient': [
+                    'interpolate',
+                    ['linear'],
+                    ['line-progress'],
+                    0, "blue",
+                    0.1, "royalblue",
+                    0.3, "cyan",
+                    0.5, "lime",
+                    0.7, "yellow",
+                    1, "red"
+                ]
+            },
+            layout: {
+                'line-cap': 'round',
+                'line-join': 'round'
+            }
+        });
+
+    }
 
     // 调整charts大小
     resizeAllCharts() {
@@ -271,6 +339,14 @@ class Analysis extends Component {
                                     onClick={debounce(this.onClickBtn3, 500)}
                                     loading={this.store.loading}
                                 >实时交通</Button>,
+                                <Button
+                                    key="7"
+                                    type="primary"
+                                    onClick={this.onClickBtn7}
+                                    loading={this.store.loading}
+                                >
+                                    线路测试
+                                </Button>,
                                 <Button
                                     key="4"
                                     type="primary"

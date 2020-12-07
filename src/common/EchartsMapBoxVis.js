@@ -201,7 +201,7 @@ class EchartsMapBoxVis extends Component {
 
         // 设置mapbox的zoom范围
         this.mapbox.setMinZoom(10);
-        this.mapbox.setMaxZoom(14);
+        this.mapbox.setMaxZoom(16);
 
         // 添加缩放和指南针控件
         this.mapbox.addControl(new mapboxgl.NavigationControl({
