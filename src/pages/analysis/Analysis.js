@@ -42,6 +42,7 @@ class Analysis extends Component {
         this.isplaying = false // 数据是否正在轮播
 
         this.mapRef = React.createRef(); // ref
+        this.mapbox = null // mapbox实例
         // window.mapboxgl = mapboxgl;
 
 
@@ -195,6 +196,13 @@ class Analysis extends Component {
             }
         })
     }
+    // 重置地图，更新摄像机视角
+    resetCamera = () => {
+        this.setState({
+            ...this.state,
+            flyActionParam: [116.368608, 39.901744, 10, 60, -30, 1000],
+        })
+    }
     // 地图重置
     onClickBtn6() {
         this.store.clearAll()
@@ -204,10 +212,11 @@ class Analysis extends Component {
                 datatime: ''
             },
             titleText: "",
-            flyActionParam: [116.368608, 39.901744, 10, 60, -30, 1000],
+            // flyActionParam: [116.368608, 39.901744, 10, 60, -30, 1000],
             extraChartsShow: false,
         }, () => {
             this.resizeAllCharts()
+            this.resetCamera()
         })
         clearInterval(this.intervalID);
         clearTimeout(this.timeoutID)
@@ -215,72 +224,252 @@ class Analysis extends Component {
         this.intervalID = null
         this.DataNameList = null
         this.dataListIndex = 0
+
+        // 清除mapbox图层和数据源
+        if (this.mapbox.getLayer('line')) {
+            this.mapbox.removeLayer('line')
+            this.mapbox.removeSource('line')
+        }
     }
     onClickBtn7() {
 
-        let map = this.mapRef.current.mapbox
+        // 清除mapbox图层和数据源
+        if (this.mapbox.getLayer('line')) {
+            this.mapbox.removeLayer('line')
+            this.mapbox.removeSource('line')
+        }
 
-        this.onClickBtn6()
-
+        let color = [
+            '#ff0000', // red
+            '#feb64d', // yello 
+            '#369674', // green
+        ]
         let geojson = {
             "type": "FeatureCollection",
             "features": [{
                 "type": "Feature",
-                "properties": {},
+                "properties": {
+                    'color': color[0]
+                },
                 "geometry": {
+                    "type": "LineString",
                     "coordinates": [
                         [116.326534, 39.993866],
+                        [116.326624, 39.991486],
+                    ],
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    'color': color[1]
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [116.326624, 39.991486],
                         [116.326624, 39.991366],
+                    ],
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    'color': color[2]
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [116.326624, 39.991366],
+                        [116.326964, 39.984936],
+                    ],
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    'color': color[1]
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [116.326964, 39.984936],
                         [116.327014, 39.984196],
+                    ],
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    'color': color[0]
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [116.327014, 39.984196],
+                        [116.327105, 39.982096],
+                    ],
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    'color': color[2]
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [116.327105, 39.982096],
+                        [116.327145, 39.981355],
+                    ],
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    'color': color[1]
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
                         [116.327145, 39.981355],
                         [116.327225, 39.979745],
-                        [116.327455, 39.974735],
-                        [116.327635, 39.971525]
                     ],
-                    "type": "LineString"
                 }
-            }]
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    'color': color[0]
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [116.327225, 39.979745],
+                        [116.327225, 39.979745],
+                    ],
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    'color': color[2]
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [116.327225, 39.979745],
+                        [116.327405, 39.975575],
+                    ],
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    'color': color[1]
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [116.327405, 39.975575],
+                        [116.327455, 39.974735],
+                    ],
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    'color': color[2]
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [116.327455, 39.974735],
+                        [116.327585, 39.972785],
+                    ],
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    'color': color[0]
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [116.327585, 39.972785],
+                        [116.327635, 39.971525],
+                    ],
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    'color': color[2]
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [116.327635, 39.971525],
+                        [116.327895, 39.966405]
+                    ],
+                }
+            },
+            ]
         };
 
+
+        let speedValue = [20, 57, 30, 15, 68, 60, 15]
+
+        let centerPoint = geojson.features[geojson.features.length >> 1].geometry.coordinates[0]
         // setup the viewport
-        map.jumpTo({
-            'center': geojson.features[0].geometry.coordinates[geojson.features[0].geometry.coordinates.length >> 1],
+        this.mapbox.jumpTo({
+            'center': centerPoint,
             'zoom': 13,
             'pitch': 0,
             'bearing': 0,
         });
-        map.addSource('line', {
-            type: 'geojson',
-            lineMetrics: true,
-            data: geojson
-        });
-        // the layer must be of type 'line'
-        map.addLayer({
-            type: 'line',
-            source: 'line',
-            id: 'line',
-            paint: {
-                'line-color': 'red',
-                'line-width': 12,
-                // 'line-gradient' must be specified using an expression
-                // with the special 'line-progress' property
-                'line-gradient': [
-                    'interpolate',
-                    ['linear'],
-                    ['line-progress'],
-                    0, "blue",
-                    0.1, "royalblue",
-                    0.3, "cyan",
-                    0.5, "lime",
-                    0.7, "yellow",
-                    1, "red"
-                ]
-            },
-            layout: {
-                'line-cap': 'round',
-                'line-join': 'round'
-            }
-        });
+
+        if (this.mapbox.getLayer('line')) {
+            console.log('mapbox line layer exist')
+        }
+        else {
+            this.mapbox.addSource('line', {
+                type: 'geojson',
+                lineMetrics: true,
+                data: geojson
+            });
+            // the layer must be of type 'line'
+            this.mapbox.addLayer({
+                type: 'line',
+                source: 'line',
+                id: 'line',
+                paint: {
+                    // 'line-gap-width': 1,
+                    'line-opacity': 0.8,
+                    'line-color': ['get', 'color'],
+                    'line-width': 8,
+                    // 'line-gradient' must be specified using an expression
+                    // with the special 'line-progress' property
+                    // 'line-gradient': [
+                    //     'interpolate',
+                    //     ['linear'],
+                    //     ['line-progress'],
+                    //     0, "blue",
+                    //     0.1, "royalblue",
+                    //     0.3, "cyan",
+                    //     0.5, "lime",
+                    //     0.7, "yellow",
+                    //     1, "red"
+                    // ]
+                },
+                layout: {
+                    'line-cap': 'butt',
+                    'line-join': 'miter',
+                }
+            });
+        }
+
 
     }
 
@@ -295,18 +484,19 @@ class Analysis extends Component {
     componentDidMount() {
         window.onresize = this.resizeAllCharts
         // 获取mapbox对象实例
+        this.mapbox = this.mapRef.current.mapbox
         // this.mapbox = this.echartsMapContainer.getModel().getComponent('mapbox3D').getMapbox();
-        // this.mapbox = this.mapRef.current.mapbox
         // this.mapRef.current.mapbox.setStyle('mapbox://styles/mapbox/dark-v10')
     };
 
     componentDidUpdate() {
-        
+
     };
 
     componentWillUnmount() {
         console.log('Analysis Destory')
         this.store.clearAll()
+        this.mapbox = null
     }
 
     render() {
