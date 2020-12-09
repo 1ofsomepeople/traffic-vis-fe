@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, PageHeader, message, Statistic, Progress, Card } from 'antd';
+import { Row, Col, Button, PageHeader, message, Statistic, Progress, Card, Timeline, Descriptions, Popover } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined, AlertOutlined } from '@ant-design/icons';
 import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 import { dataStr_dataObj, dataObj_dataStr, loadDataList, throttle, debounce } from '../../common/apis';
@@ -35,7 +35,13 @@ class Analysis extends Component {
                 // titleText: "交通拥堵情况三维柱状图",
             },
             titleText: "",
-            extraChartsShow: false, // 额外图表的显示情况
+
+            // 展示额外信息的组件的显示和隐藏
+            // 0 默认 不展示
+            // 1 城市级
+            // 2 道路级
+            // 3 节点级
+            extraInfoSwitch: 0, // 额外信息
         }
         window.mapboxgl = mapboxgl;
         this.DataNameList = null // 轮播的数据name list
@@ -72,7 +78,6 @@ class Analysis extends Component {
             message.warning('获取数据失败');
         }
         else {
-            // console.log(resData)
             // 数据处理
             for (let i = 0, len = resData.length; i < len; i++) {
                 // 数据映射 1->1 3->150 7-175 10->200
@@ -115,7 +120,7 @@ class Analysis extends Component {
         this.loaddata("./2019-04-02_09-00.json")
         this.setState({
             ...this.state,
-            extraChartsShow: true,
+            extraInfoSwitch: 1,
         }, () => {
             this.resizeAllCharts()
         })
@@ -149,7 +154,7 @@ class Analysis extends Component {
             ...this.state,
             dataType: 'realtime',
             titleText: "交通实时拥堵情况三维柱状图",
-            extraChartsShow: false,
+            extraInfoSwitch: 0,
         }, () => {
             this.resizeAllCharts()
         })
@@ -214,7 +219,7 @@ class Analysis extends Component {
             },
             titleText: "",
             // flyActionParam: [116.368608, 39.901744, 10, 60, -30, 1000],
-            extraChartsShow: false,
+            extraInfoSwitch: 0,
         }, () => {
             this.resizeAllCharts()
             this.resetCamera()
@@ -233,7 +238,6 @@ class Analysis extends Component {
             this.mapbox.removeLayer('linePoint')
             this.mapbox.removeSource('linePoint')
         }
-        console.log(this.mapbox)
     }
     onClickBtn7() {
         // 清除mapbox图层和数据源
@@ -243,6 +247,14 @@ class Analysis extends Component {
             this.mapbox.removeLayer('linePoint')
             this.mapbox.removeSource('linePoint')
         }
+
+        this.setState({
+            ...this.state,
+            titleText: "道路拥堵情况",
+            extraInfoSwitch: 2,
+        }, () => {
+            this.resizeAllCharts()
+        })
 
         let color = [
             '#ff0000', // red
@@ -521,7 +533,9 @@ class Analysis extends Component {
         echarts.init(document.getElementById("pie1")).resize();
         echarts.init(document.getElementById("line1")).resize();
         echarts.init(document.getElementById("dash1")).resize();
+        echarts.init(document.getElementById("line2")).resize();
     }
+
     componentDidMount() {
         window.onresize = this.resizeAllCharts
         // 获取mapbox对象实例
@@ -600,7 +614,7 @@ class Analysis extends Component {
                     </Col>
                 </Row>
                 <Row gutter={[16, 4]} >
-                    <Col span={this.state.extraChartsShow ? 16 : 24} className="mapContainer">
+                    <Col span={this.state.extraInfoSwitch > 0 ? 16 : 24} className="mapContainer">
                         <EchartsMapBoxVis
                             mapContainerID="mapContainer"
                             chartsParam={this.state.chartsParam}
@@ -610,7 +624,7 @@ class Analysis extends Component {
                             ref={this.mapRef}
                         />
                     </Col>
-                    <Col span={this.state.extraChartsShow ? 8 : 0} >
+                    <Col span={this.state.extraInfoSwitch === 1 ? 8 : 0} >
                         <Row gutter={[16, 4]}>
                             <Col span={8}>
                                 <JamScoreDash chartsDashID="dash1" />
@@ -622,6 +636,33 @@ class Analysis extends Component {
                         <Row gutter={[16, 4]}>
                             <Line chartsLineID="line1" />
                         </Row>
+                    </Col>
+                    <Col span={this.state.extraInfoSwitch === 2 ? 8 : 0} >
+                        <Row>
+                            <Col span={24}>
+                                <Descriptions
+                                    title="道路信息"
+                                    layout="horizontal"
+                                    bordered
+                                    column={1}
+                                    size='default'
+                                >
+                                    <Descriptions.Item label="道路名称">中关村东路</Descriptions.Item>
+                                    <Descriptions.Item label="道路方向">由北向南</Descriptions.Item>
+                                    <Descriptions.Item label="时间">2015-09-01 09:12:11</Descriptions.Item>
+                                    <Descriptions.Item label="平均通行速度">45km/h</Descriptions.Item>
+                                    <Descriptions.Item label="预计通行时间" >32min</Descriptions.Item>
+                                </Descriptions>
+                            </Col>
+                        </Row>
+                        <Row gutter={[16, 4]}>
+                            <Col span={24}>
+                                <Line chartsLineID="line2" />
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col span={this.state.extraInfoSwitch === 3 ? 8 : 0} >
+                        <h3>point wise</h3>
                     </Col>
 
                 </Row>
