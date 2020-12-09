@@ -137,7 +137,7 @@ class BasicLayout extends Component {
                             </Menu.Item>
                             <Menu.Item key="8">Team 2</Menu.Item>
                         </SubMenu> */}
-                        <Menu.Item key="9" icon={<FileOutlined />} >others</Menu.Item>
+                        {/* <Menu.Item key="9" icon={<FileOutlined />} >others</Menu.Item> */}
                     </Menu>
                 </Sider>
                 <Layout className="site-layout" style={{ marginLeft: 150 }}>
