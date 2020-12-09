@@ -37,6 +37,7 @@ class Analysis extends Component {
             titleText: "",
             extraChartsShow: false, // 额外图表的显示情况
         }
+        window.mapboxgl = mapboxgl;
         this.DataNameList = null // 轮播的数据name list
         this.dataListIndex = 0 // 遍历数据list的index
         this.isplaying = false // 数据是否正在轮播
@@ -229,14 +230,18 @@ class Analysis extends Component {
         if (this.mapbox.getLayer('line')) {
             this.mapbox.removeLayer('line')
             this.mapbox.removeSource('line')
+            this.mapbox.removeLayer('linePoint')
+            this.mapbox.removeSource('linePoint')
         }
+        console.log(this.mapbox)
     }
     onClickBtn7() {
-
         // 清除mapbox图层和数据源
         if (this.mapbox.getLayer('line')) {
             this.mapbox.removeLayer('line')
             this.mapbox.removeSource('line')
+            this.mapbox.removeLayer('linePoint')
+            this.mapbox.removeSource('linePoint')
         }
 
         let color = [
@@ -244,182 +249,189 @@ class Analysis extends Component {
             '#feb64d', // yello 
             '#369674', // green
         ]
+
+        // 道路测试数据
         let geojson = {
             "type": "FeatureCollection",
-            "features": [{
-                "type": "Feature",
-                "properties": {
-                    'color': color[0]
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": {
+                        'color': color[0]
+                    },
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
+                            [116.326534, 39.993866],
+                            [116.326624, 39.991486],
+                        ],
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.326534, 39.993866],
-                        [116.326624, 39.991486],
-                    ],
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    'color': color[1]
+                {
+                    "type": "Feature",
+                    "properties": {
+                        'color': color[1]
+                    },
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
+                            [116.326624, 39.991486],
+                            [116.326964, 39.984936],
+                        ],
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.326624, 39.991486],
-                        [116.326624, 39.991366],
-                    ],
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    'color': color[2]
+                {
+                    "type": "Feature",
+                    "properties": {
+                        'color': color[2]
+                    },
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
+                            [116.326964, 39.984936],
+                            [116.327105, 39.982096],
+                        ],
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.326624, 39.991366],
-                        [116.326964, 39.984936],
-                    ],
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    'color': color[1]
+                {
+                    "type": "Feature",
+                    "properties": {
+                        'color': color[1]
+                    },
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
+                            [116.327105, 39.982096],
+                            [116.327225, 39.979745],
+                        ],
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.326964, 39.984936],
-                        [116.327014, 39.984196],
-                    ],
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    'color': color[0]
+                {
+                    "type": "Feature",
+                    "properties": {
+                        'color': color[0]
+                    },
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
+                            [116.327225, 39.979745],
+                            [116.327405, 39.975575],
+                        ],
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.327014, 39.984196],
-                        [116.327105, 39.982096],
-                    ],
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    'color': color[2]
+                {
+                    "type": "Feature",
+                    "properties": {
+                        'color': color[2]
+                    },
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
+                            [116.327405, 39.975575],
+                            [116.327585, 39.972785],
+                        ],
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.327105, 39.982096],
-                        [116.327145, 39.981355],
-                    ],
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    'color': color[1]
+                {
+                    "type": "Feature",
+                    "properties": {
+                        'color': color[1]
+                    },
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
+                            [116.327585, 39.972785],
+                            [116.327895, 39.966405]
+                        ],
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.327145, 39.981355],
-                        [116.327225, 39.979745],
-                    ],
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    'color': color[0]
+            ]
+        };
+        // 道路路段中点点测试数据
+        let roadPointsgeojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>双清路 至 成府路</strong><p>拥堵，时速20公里</p>",
+                        "icon": "bar"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [116.326579, 39.992676]
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.327225, 39.979745],
-                        [116.327225, 39.979745],
-                    ],
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    'color': color[2]
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>成府路 至 北四环西路辅路</strong><p>畅通，时速59公里</p>",
+                        "icon": "bar"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [116.326794, 39.988151]
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.327225, 39.979745],
-                        [116.327405, 39.975575],
-                    ],
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    'color': color[1]
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>北四环西路辅路 至 中关村南一条</strong><p>缓慢，时速34公里</p>",
+                        "icon": "bar"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [116.3270595, 39.983146]
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.327405, 39.975575],
-                        [116.327455, 39.974735],
-                    ],
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    'color': color[2]
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>中关村南一条 至 中关村南路</strong><p>缓慢，时速40公里</p>",
+                        "icon": "bar"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [116.327185, 39.98055]
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.327455, 39.974735],
-                        [116.327585, 39.972785],
-                    ],
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    'color': color[0]
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>中关村南路 至 知春路</strong><p>缓慢，时速27公里</p>",
+                        "icon": "bar"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [116.327315, 39.97766]
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.327585, 39.972785],
-                        [116.327635, 39.971525],
-                    ],
-                }
-            },
-            {
-                "type": "Feature",
-                "properties": {
-                    'color': color[2]
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>知春路 至 双榆树北路</strong><p>缓慢，时速39公里</p>",
+                        "icon": "bar"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [116.32752, 39.97376]
+                    }
                 },
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                        [116.327635, 39.971525],
-                        [116.327895, 39.966405]
-                    ],
-                }
-            },
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "description": "<strong>双榆树北路 至 北三环西路辅路</strong><p>畅通，时速41公里</p>",
+                        "icon": "bar"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [116.327765, 39.968965]
+                    }
+                },
             ]
         };
 
-
-        let speedValue = [20, 57, 30, 15, 68, 60, 15]
+        let speedValue = [20, 59, 34, 40, 27, 39, 41]
 
         let centerPoint = geojson.features[geojson.features.length >> 1].geometry.coordinates[0]
         // setup the viewport
@@ -449,28 +461,57 @@ class Analysis extends Component {
                     'line-opacity': 0.8,
                     'line-color': ['get', 'color'],
                     'line-width': 8,
-                    // 'line-gradient' must be specified using an expression
-                    // with the special 'line-progress' property
-                    // 'line-gradient': [
-                    //     'interpolate',
-                    //     ['linear'],
-                    //     ['line-progress'],
-                    //     0, "blue",
-                    //     0.1, "royalblue",
-                    //     0.3, "cyan",
-                    //     0.5, "lime",
-                    //     0.7, "yellow",
-                    //     1, "red"
-                    // ]
                 },
                 layout: {
                     'line-cap': 'butt',
                     'line-join': 'miter',
                 }
             });
+
+
+            this.mapbox.addSource('linePoint', {
+                type: 'geojson',
+                lineMetrics: true,
+                data: roadPointsgeojson
+            });
+            // 添加路段注释点图层
+            this.mapbox.addLayer({
+                type: 'symbol',
+                id: 'linePoint',
+                source: 'linePoint',
+                "layout": {
+                    "icon-image": "{icon}-15",
+                    "icon-allow-overlap": true
+                }
+            });
+
+            this.mapbox.on('click', 'linePoint', (e) => {
+                var coordinates = e.features[0].geometry.coordinates.slice();
+                var description = e.features[0].properties.description;
+                // Ensure that if the map is zoomed out such that multiple
+                // copies of the feature are visible, the popup appears
+                // over the copy being pointed to.
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+                // Populate the popup and set its coordinates
+                // based on the feature found.
+                new mapboxgl.Popup()
+                    .setLngLat(coordinates)
+                    .setHTML(description)
+                    .addTo(this.mapbox);
+            });
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            // 回调函数要用箭头函数啊，否则会改变this的指向
+            this.mapbox.on('mouseenter', 'linePoint', () => {
+                this.mapbox.getCanvas().style.cursor = 'pointer';
+
+            });
+            this.mapbox.on('mouseleave', 'linePoint', () => {
+                this.mapbox.getCanvas().style.cursor = '';
+            });
+
         }
-
-
     }
 
     // 调整charts大小
