@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import { Row, Col, Button, message, Select, Typography } from 'antd';
 import mapboxgl from 'mapbox-gl';
 import echarts from 'echarts';
 import 'echarts-gl';
 
 import './EchartsMapBoxVis.css'
 import { eqArr } from './apis';
-
+import Title from 'antd/lib/skeleton/Title';
+const { Option } = Select;
+// const { Title } = Typography;
 
 class EchartsMapBoxVis extends Component {
     constructor(props) {
@@ -86,7 +89,7 @@ class EchartsMapBoxVis extends Component {
             bearing: this.mapbox.getBearing(),
             pitch: this.mapbox.getPitch()
         }
-        if (lon !== this.nowMapParam.center[0] || lat !== this.nowMapParam.center[1] || zoom !== this.nowMapParam.zoom || pitch !== this.nowMapParam.pitch || bearing !== this.nowMapParam.bearing){
+        if (lon !== this.nowMapParam.center[0] || lat !== this.nowMapParam.center[1] || zoom !== this.nowMapParam.zoom || pitch !== this.nowMapParam.pitch || bearing !== this.nowMapParam.bearing) {
             mapbox.easeTo({
                 // CameraOptions
                 center: [lon, lat],
@@ -95,7 +98,7 @@ class EchartsMapBoxVis extends Component {
                 pitch: pitch,
                 // Mapbox 地图的旋转角度
                 bearing: bearing,
-    
+
                 // AnimationOptions
                 // 动态转换的持续时间，按毫秒计算
                 duration: duration,
@@ -243,9 +246,50 @@ class EchartsMapBoxVis extends Component {
             }
         })
     };
+
+    // 修改map的style
+    mapStyleChange = (value) => {
+        let newStyle = 'mapbox://styles/mapbox/' + value + '-v9'
+        // console.log(newStyle)
+        this.mapbox.setStyle(newStyle);
+    }
+
     render() {
         return (
-            <div id={this.props.mapContainerID} className="mapBoxContainer" style={{ minHeight: "600px", height: "100%", width: "100%" }} />
+            <>
+                <div
+                    className = "mapNav"
+                    style={{
+                        width: '100px',
+                        position: 'absolute',
+                        top: '12px',
+                        right: '60px',
+                        zIndex: 1,
+                    }}
+                >
+                    {/* <Title level={1}>Ant Design 4.0</Title> */}
+                    <p className="navTitle">地图样式</p>
+                    <Select
+                        defaultValue="streets"
+                        style={{
+                            width: '100px',
+                        }}
+                        onChange={this.mapStyleChange}
+                    >
+                        <Option value="streets">streets</Option>
+                        <Option value="light">light</Option>
+                        <Option value="dark">dark</Option>
+                        <Option value="outdoors">outdoors </Option>
+                        <Option value="satellite">satellite</Option>
+                    </Select>
+                </div>
+
+                <div
+                    id={this.props.mapContainerID}
+                    className="mapBoxContainer"
+                    style={{ minHeight: "600px", height: "100%", width: "100%" }}
+                />
+            </>
         );
     }
 }
