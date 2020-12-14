@@ -27,7 +27,7 @@ class Line extends Component {
         }
         let testOption = {
             title: {
-                text: '当日24小时拥堵指数变化',
+                text: this.props.titleText,
                 left: 'top' // title 组件离容器左侧的距离。
             },
             backgroundColor: '#fff',
@@ -158,7 +158,7 @@ class Line extends Component {
                         shadowBlur: 20
                     }
                 },
-                data: [55, 35, 62, 55, 97, 64, 44, 66, 78, 82, 33, 77],
+                data: [55, 35, 62, 55, 97, 64, 44, 66, 78, 82, 33, 77,55, 35, 62, 55, 97, 64, 44, 66, 78, 82, 33, 77,78],
             }]
         };
 

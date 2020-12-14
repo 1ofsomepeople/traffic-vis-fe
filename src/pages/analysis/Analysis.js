@@ -634,7 +634,10 @@ class Analysis extends Component {
                             </Col>
                         </Row>
                         <Row gutter={[16, 4]}>
-                            <Line chartsLineID="line1" />
+                            <Line 
+                                chartsLineID="line1"
+                                titleText = "当日24小时拥堵指数变化" 
+                            />
                         </Row>
                     </Col>
                     <Col span={this.state.extraInfoSwitch === 2 ? 8 : 0} >
@@ -657,7 +660,11 @@ class Analysis extends Component {
                         </Row>
                         <Row gutter={[16, 4]}>
                             <Col span={24}>
-                                <Line chartsLineID="line2" />
+                                <Line 
+                                    chartsLineID="line2"
+                                    titleText = "24小时平均时速变化"
+                                    data = {{}}
+                                />
                             </Col>
                         </Row>
                     </Col>
