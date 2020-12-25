@@ -287,7 +287,7 @@ class EchartsMapBoxVis extends Component {
                 <div
                     id={this.props.mapContainerID}
                     className="mapBoxContainer"
-                    style={{ minHeight: "600px", height: "100%", width: "100%" }}
+                    style={{ minHeight: "500px", height: "100%", width: "100%" }}
                 />
             </>
         );

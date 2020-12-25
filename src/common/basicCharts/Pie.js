@@ -68,7 +68,7 @@ class Pie extends Component {
 
     render() {
         return (
-            <div id={this.props.chartsPieID} style={{ minHeight: "200px", height: "100%", width: "100%" }} />
+            <div id={this.props.chartsPieID} style={{ minHeight: "100px", height: "100%", width: "100%", paddingLeft:"15px" }} />
         );
     }
 }

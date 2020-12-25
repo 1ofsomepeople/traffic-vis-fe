@@ -1,3 +1,6 @@
 .mapContainer{
     display: flex;
 }
+.marginbottom10{
+    margin-bottom: 10px;
+}

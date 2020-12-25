@@ -1,30 +1,24 @@
 import React, { Component } from 'react';
 import echarts from 'echarts';
 import 'echarts-gl';
+import { len } from 'echarts-gl';
 
 class Line extends Component {
     constructor(props) {
         super(props);
         this.state = {}
 
-        this.chartsLine = null // echarts对象实例
         
-        this.showLine = this.showLine.bind(this)
+        this.chartsLine = null // echarts对象实例
+
     }
 
-    showLine() {
-        // echarts对象实例
+    initLine = () => {
+        // 初始化echarts对象实例
         this.chartsLine = echarts.init(document.getElementById(this.props.chartsLineID));
-
-        let timeStrList = []
-        for (let index = 0; index < 24; index++) {
-            let str = index.toString()
-            if(index<10){
-                str = '0'+str
-            }
-            str = str + ':00'
-            timeStrList.push(str)
-        }
+    }
+    updateLine = () => {
+        
         let testOption = {
             title: {
                 text: this.props.titleText,
@@ -81,7 +75,7 @@ class Line extends Component {
                     show: false
                 },
                 boundaryGap: true,
-                data: timeStrList,
+                data: this.props.xAxisdata, // 坐标轴刻度数组
 
             }],
 
@@ -89,10 +83,9 @@ class Line extends Component {
                 type: 'value',
                 min: 0,
                 splitNumber: 4,
-                splitLine: {
-                    show: true,
-
-                },
+                // splitLine: {
+                //     show: true,
+                // },
                 axisLine: {
                     show: true,
                 },
@@ -158,7 +151,7 @@ class Line extends Component {
                         shadowBlur: 20
                     }
                 },
-                data: [55, 35, 62, 55, 97, 64, 44, 66, 78, 82, 33, 77,55, 35, 62, 55, 97, 64, 44, 66, 78, 82, 33, 77,78],
+                data: this.props.data, // 折线图数据数组
             }]
         };
 
@@ -166,16 +159,16 @@ class Line extends Component {
     }
 
     componentDidMount() {
-        this.showLine();
+        this.initLine();
         window.onresize = () => {
             this.chartsLine.resize()
         }
     }
 
     componentDidUpdate() {
-
+        this.updateLine()
     }
-    
+
     componentWillUnmount() {
         console.log('chartsLine Destory')
         this.chartsLine = null // echarts对象实例
@@ -183,7 +176,14 @@ class Line extends Component {
 
     render() {
         return (
-            <div id={this.props.chartsLineID} style={{ minHeight: "200px", height: "100%", width: "100%" }} />
+            <div 
+                id={this.props.chartsLineID} 
+                style={{ 
+                    minHeight: "200px", 
+                    height: "100%", 
+                    width: "100%", 
+                    padding:"5px" ,
+                }} />
         );
     }
 }

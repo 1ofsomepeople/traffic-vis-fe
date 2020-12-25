@@ -18,7 +18,7 @@ class JamScoreDash extends Component {
 
         let testOption = {
             title: {
-                text: '拥堵指数',
+                text: '平均时速',
                 left: 'top' // title 组件离容器左侧的距离。
             },
             angleAxis: {
@@ -109,7 +109,7 @@ class JamScoreDash extends Component {
                     color: '#333333',
                     fontSize: 25
                 },
-                data: [50]
+                data: [41]
             }]
         };
 
