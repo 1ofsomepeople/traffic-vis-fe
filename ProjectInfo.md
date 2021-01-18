@@ -149,12 +149,16 @@ Nginx 403 500问题
 
 ## 3. 技术栈和工具库
 
-1. React
-2. Mobx：React的状态管理
-3. UI组件库：Ant Design
-4. 可视化组件：echarts、echarts-gl
-5. Mapbox：地图API
-6. Axios：基于 promise 的 HTTP 库
+1. [React](https://react.docschina.org/)
+2. React的状态管理:
+   1. [Mobx](https://cn.mobx.js.org/)
+3. UI组件库:
+   1. [Ant Design](https://ant.design/components/overview-cn/)
+4. 可视化组件：
+   1. [echarts/echarts-gl](https://echarts.apache.org/zh/index.html)
+5. 地图:
+   1. [Mapbox JS](http://www.mapbox.cn/mapbox-gl-js/api/)
+6. [Axios：基于 promise 的 HTTP 库](http://axios-js.com/)
 
 ## 4. 其他
 
