@@ -162,5 +162,6 @@ Nginx 403 500问题
 
 ## 4. 其他
 
-1. 建议使用VS Code，配置开发所需插件
+1. 前端开发工具建议使用VS Code，配置开发所需插件
+   1. VS Code插件list可以参看 [github gist](https://gist.github.com/dingchaofan/1f325e718ba775336bfcd2730a4fae28)中`extensions.json`文件
 2. 开发日志可参看git提交记录，建议使用[git commit提交规范](https://blog.csdn.net/ligang2585116/article/details/80284819)
