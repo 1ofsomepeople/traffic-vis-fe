@@ -4,10 +4,13 @@
 
 ## 1. 项目环境配置、启动、构建
 
+安装配置 node
+
 ```shell
 git clone https://github.com/dingchaofan/traffic-vis-fe
 cd traffic-vis-fe
-yarn # 安装配置依赖包
+yarn # 安装配置依赖包 需要配置安装yarn
+# 或者 npm install
 
 npm start # 启动项目，本地调试
 npm build # 构建发布，生成build目录
