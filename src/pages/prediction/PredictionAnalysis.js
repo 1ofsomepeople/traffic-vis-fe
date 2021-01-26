@@ -273,7 +273,7 @@ class PredictionAnalysis extends Component {
                     </Col>
                 </Row>
                 <Row align={"middle"} justify={"center"} gutter={[24, 4]}>
-                    <Col span={16} >
+                    <Col span={12} >
                         <Slider
                             min={0}
                             max={this.DataGtNameList ? this.DataGtNameList.length - 1 : 0}
@@ -289,7 +289,7 @@ class PredictionAnalysis extends Component {
                             disabled={this.store.loading}
                         />
                     </Col>
-                    <Col span={8} className="PredInfo">
+                    <Col span={12} className="PredInfo">
                         <Descriptions
                             // title="预测算法信息"
                             layout="vertical"
