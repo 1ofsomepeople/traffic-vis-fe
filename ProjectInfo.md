@@ -65,7 +65,7 @@ server{
         server_name 39.105.230.32;
         location / {
                 # 项目所在目录
-                root /root/project/build/;
+                root /root/project/traffic-vis-fe/build/;
                 # 默认打开的首页文件
                 index index.html index,htm;
                 # react router配置
