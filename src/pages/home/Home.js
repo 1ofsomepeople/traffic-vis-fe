@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
 import { Row, Col } from 'antd';
-import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
-import MapBoxPointsVis from '../../common/MapBoxPointsVis'
+import React, { Component } from 'react';
+
 
 import './home.css';
+import MapBoxPointsVis from '../../common/MapBoxPointsVis'
+import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
+
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -11,6 +14,7 @@ class Home extends Component {
     }
     render() {
         return (
+            //!点击主页按钮出现的三行组件
             <div>
                 <Row className="homeBar">
                     <Col span={6} className="positionLeft">
