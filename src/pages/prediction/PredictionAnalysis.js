@@ -295,10 +295,14 @@ class PredictionAnalysis extends Component {
                     2)点击加载历史数据对比后出现
                 */}
                 <Row align={"middle"} justify={"center"} gutter={[24, 4]}>
+<<<<<<< HEAD
                     <Col span={16} >
                         {
                             //https://ant.design/components/slider-cn/
                         }
+=======
+                    <Col span={12} >
+>>>>>>> eef704dd5a5084ec9f3e3c1cf84f8783ca30e85a
                         <Slider
                             min={0}
                             max={this.DataGtNameList ? this.DataGtNameList.length - 1 : 0}
@@ -314,10 +318,14 @@ class PredictionAnalysis extends Component {
                             disabled={this.store.loading}
                         />
                     </Col>
+<<<<<<< HEAD
                     <Col span={8} className="PredInfo">
                         {
                             //https://ant.design/components/descriptions-cn/
                         }
+=======
+                    <Col span={12} className="PredInfo">
+>>>>>>> eef704dd5a5084ec9f3e3c1cf84f8783ca30e85a
                         <Descriptions
                             // title="预测算法信息"
                             layout="vertical"

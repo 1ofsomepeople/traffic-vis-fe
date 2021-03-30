@@ -51,7 +51,9 @@ systemctl start nginx
 
 nginx的主配置目录位于`/etc/nginx/`中
 
-项目所在目录：`/root/project/build/`;
+项目所在目录：`/root/project/traffic-vis-fe/`;
+
+项目目录下有`build`目录，是构建好的项目目录，需要将这个目录的路径作为nginx访问的路径
 
 在`/etc/nginx/conf.d`目录下新建一个`traffic.conf`文件作为项目的配置文件
 
@@ -65,7 +67,7 @@ server{
         server_name 39.105.230.32;
         location / {
                 # 项目所在目录
-                root /root/project/build/;
+                root /root/project/traffic-vis-fe/build/;
                 # 默认打开的首页文件
                 index index.html index,htm;
                 # react router配置
