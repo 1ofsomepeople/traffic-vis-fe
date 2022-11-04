@@ -11,7 +11,7 @@ function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <BasicLayout />           {/* BasicLayout组件 */}
+        <BasicLayout /> {/* BasicLayout组件 */}
       </BrowserRouter>
     </Provider>
   );
