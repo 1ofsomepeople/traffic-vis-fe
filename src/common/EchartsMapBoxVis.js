@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, message, Select, Typography } from 'antd';
+import { Select } from 'antd';
 import mapboxgl from 'mapbox-gl';
 import echarts from 'echarts';
 import 'echarts-gl';
 
 import './EchartsMapBoxVis.css'
-import { eqArr } from './apis';
-import Title from 'antd/lib/skeleton/Title';
+// import { eqArr } from './apis';
+// import Title from 'antd/lib/skeleton/Title';
 const { Option } = Select;
 // const { Title } = Typography;
 
@@ -37,6 +37,7 @@ class EchartsMapBoxVis extends Component {
     this.showmapbox = this.showmapbox.bind(this)
   }
 
+  //CAUTION:地图数据在此更新
   componentDidMount() {
     // window.mapboxgl = mapboxgl;
     this.showmapbox(this.props.data.data, this.props.data.datatime);
@@ -44,6 +45,7 @@ class EchartsMapBoxVis extends Component {
       this.myChartGl.resize()
     }
   }
+
   componentDidUpdate() {
     let data = this.props.data.data
     let datatime = this.props.data.datatime
@@ -52,7 +54,7 @@ class EchartsMapBoxVis extends Component {
     let newOption = {
       title: {
         text: this.props.titleText,
-        subtext: datatime ? datatime : '',
+        subtext: datatime ? datatime : '', //子标题
       },
       series: [{
         data: data ? data : [],
@@ -236,7 +238,7 @@ class EchartsMapBoxVis extends Component {
       let pitch = this.mapbox.getPitch()
 
       if (this.props.asyncParam) {
-        if (this.asyncParam.center[0] != center[0] || this.asyncParam.center[1] != center[1] || this.asyncParam.zoom != zoomLevel || this.asyncParam.bearing != bearing || this.asyncParam.pitch != pitch) {
+        if (this.asyncParam.center[0] !== center[0] || this.asyncParam.center[1] !== center[1] || this.asyncParam.zoom !== zoomLevel || this.asyncParam.bearing !== bearing || this.asyncParam.pitch !== pitch) {
           this.asyncParam.center = center
           this.asyncParam.zoom = zoomLevel
           this.asyncParam.bearing = bearing

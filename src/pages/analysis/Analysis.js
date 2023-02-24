@@ -739,14 +739,12 @@ class Analysis extends Component {
           }
         },
       ]
-    };
-
+    }
 
     if (this.mapbox.getLayer('points')) {
       console.log('mapbox points layer exist')
     }
     else {
-
       // 加载自定义图标
       //loadImage(url,callback)
       //url(string)图像的 URL。图像的格式必须为 png， webp 或者 jpg 。
@@ -789,15 +787,13 @@ class Analysis extends Component {
           .addTo(this.mapbox);
       });
       // Change the cursor to a pointer when the mouse is over the places layer.
-      // 回调函数要用箭头函数啊，否则会改变this的指向
+      //CAUTION: 回调函数要用箭头函数，否则会改变this的指向
       this.mapbox.on('mouseenter', 'points', () => {
         this.mapbox.getCanvas().style.cursor = 'pointer';
-
       });
       this.mapbox.on('mouseleave', 'points', () => {
         this.mapbox.getCanvas().style.cursor = '';
       });
-
     }
   }
 

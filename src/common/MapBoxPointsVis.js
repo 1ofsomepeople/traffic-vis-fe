@@ -4,10 +4,9 @@ import mapboxgl from 'mapbox-gl';
 class MapBoxPointsVis extends Component {
     constructor(props) {
         super(props);
-        this.state = {  }
+        this.state = {}
         this.map = null;
         mapboxgl.accessToken = 'pk.eyJ1IjoiaHVzdDEyIiwiYSI6ImNrM3BpbDhsYTAzbDgzY3J2OXBzdXFuNDMifQ.bDD9-o_SB4fR0UXzYLy9gg';
-        
     }
 
     showMap(){
@@ -25,11 +24,11 @@ class MapBoxPointsVis extends Component {
             this.map.resize()
         }
     }
-    render() { 
+    render() {
         return (
             <div id={this.props.mapContainerID} style={{ minHeight: "600px",height:"100%" }}/>
         );
     }
 }
- 
+
 export default MapBoxPointsVis;

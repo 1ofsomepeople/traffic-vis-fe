@@ -3,11 +3,11 @@ import echarts from 'echarts';
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { loadDataList, loadDataListNew, throttle } from '../../common/apis';
-import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
-import EchartHeatMapVis from '../../common/EchartHeatMapVis';
-import './Odpred.css';
-
-
+// import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
+// import EchartHeatMapVis from '../../common/EchartHeatMapVis';
+import './OdPred.css';
+import Bar from '../../common/basicCharts/Bar';
+import Bar3D from '../../common/basicCharts/Bar3D';
 
 
 const { Option } = Select;
@@ -16,10 +16,10 @@ const { Option } = Select;
 @observer
 
 
-class Odpred extends Component {
+class OdPred extends Component {
   constructor(props) {
     super(props)
-    this.store = props.store.odStore //FIXME: 改成OD的store
+    this.store = props.store.odStore
     // console.log(this.store.data)
     this.state = {
       // 初始化
@@ -39,6 +39,46 @@ class Odpred extends Component {
       historyPredDataPath: './history_predictDataList/history_pred/lr_pred/', // 历史预测数据根路径
       dataIndex: 0, // history数据的index值
       predictType: 'ffn', // history预测数据的预测模型类型
+      predStation: '老山公交场站',
+      stationDic:{
+        '老山公交场站' : 0,
+        '老山南路东口' : 1,
+        '地铁八宝山站' : 2,
+        '玉泉路口西' : 3,
+        '永定路口东' : 4,
+        '五棵松桥东' : 5,
+        '沙沟路口西' : 6,
+        '东翠路口' : 6,
+        '万寿路口西' : 7,
+        '翠微路口' : 7,
+        '公主坟' : 8,
+        '军事博物馆' : 9,
+        '木樨地西' : 10,
+        '工会大楼' : 11,
+        '南礼士路' : 12,
+        '复兴门内' : 12,
+        '西单路口东' : 13,
+        '天安门西' : 14,
+        '天安门东' : 15,
+        '东单路口西' : 16,
+        '北京站口东' : 17,
+        '日坛路' : 18,
+        '永安里路口西' : 19,
+        '大北窑西' : 20,
+        '大北窑东' : 21,
+        '郎家园' : 21,
+        '八王坟西' : 22,
+        '四惠枢纽站' : 23
+      },
+      pointBarTitle : '老山公交场站车站乘客分流图',
+      pointBarDataGt : [],
+      pointBarDataPred: [],
+      pointBar3DTitle : '乘客分流图',
+      pointBar3DDataGt : [],
+      pointBar3DDataPred: [],
+      pointBar3DPredTitle: '预测值',
+      pointBar3DGtTitle: '真实值',
+
     }
     this.DataGtNameList   = null // 真实数据的name list
     this.DataPredNameList  = null // 预测数据的name list
@@ -48,8 +88,10 @@ class Odpred extends Component {
     this.realTimePredice    = this.realTimePredice.bind(this)
     this.sliderOnChange_local  = this.sliderOnChange_local.bind(this)
     this.selectOnChange_local  = this.selectOnChange_local.bind(this)
+    this.selectModelOnChange_online  = this.selectModelOnChange_online.bind(this)
+    this.selectStationOnChange_online  = this.selectStationOnChange_online.bind(this)
     this.sliderOnChange_online = this.sliderOnChange_online.bind(this)
-    this.selectOnChange_online = this.selectOnChange_online.bind(this)
+    // this.selectOnChange_online = this.selectOnChange_online.bind(this)
   }
 
   componentDidMount() {
@@ -175,16 +217,20 @@ class Odpred extends Component {
       titleTextRight: "预测数据 FFN模型",
       dataIndex: 0, // history数据的index值
       predictType: 'FFN', // history预测数据的预测模型类型
+      predStation: '老山公交场站',
     }, () => {
       let historyGtQueryParam = {
         dataIndex: this.state.dataIndex,
+        predictType: this.state.predictType,
+        predStation: this.state.predStation
       }
       let historyPredQueryParam = {
         dataIndex: this.state.dataIndex,
         predictType: this.state.predictType,
+        predStation: this.state.predStation
       }
-      this.store.getOdGt(historyGtQueryParam); //TODO: 改成OD的请求函数
-      // this.store.getOdPred(historyPredQueryParam); //TODO: 改成OD的请求函数
+      this.store.getOdGt(historyGtQueryParam)
+      this.store.getOdPred(historyPredQueryParam)
     })
 
   }
@@ -212,19 +258,22 @@ class Odpred extends Component {
     }, () => {
       let historyGtQueryParam = {
         dataIndex: this.state.dataIndex,
+        predictType: this.state.predictType,
+        predStation: this.state.predStation
       }
       let historyPredQueryParam = {
         dataIndex: this.state.dataIndex,
         predictType: this.state.predictType,
+        predStation: this.state.predStation
       }
-      this.store.getOdGt(historyGtQueryParam); //TODO: 改成OD的请求函数
-      this.store.getOdPred(historyPredQueryParam); //TODO: 改成OD的请求函数
+      this.store.getOdGt(historyGtQueryParam)
+      this.store.getOdPred(historyPredQueryParam)
     })
   }
 
 
   // 当选择不同模型时，向后台请求：当前时刻，模型的预测数据
-  selectOnChange_online(value) {
+  selectModelOnChange_online(value) {
     // console.log(value)
     this.setState({
       ...this.state,
@@ -234,11 +283,33 @@ class Odpred extends Component {
       let historyPredQueryParam = {
         dataIndex: this.state.dataIndex,
         predictType: this.state.predictType,
+        predStation: this.state.predStation
       }
-      this.store.getOdPred(historyPredQueryParam); //TODO: 改成自己的请求函数
+      this.store.getOdPred(historyPredQueryParam)
     })
   }
 
+  // 当选择不同站点时，在当前模型的预测数据中寻找对应站点的数据
+  selectStationOnChange_online(value) {
+    this.setState({
+      ...this.state,
+      predStation: value,
+      pointBarTitle: value + '车站乘客分流图'
+    }, () => {
+      let historyGtQueryParam = {
+        dataIndex: this.state.dataIndex,
+        predictType: this.state.predictType,
+        predStation: this.state.predStation
+      }
+      let historyPredQueryParam = {
+        dataIndex: this.state.dataIndex,
+        predictType: this.state.predictType,
+        predStation: this.state.predStation
+      }
+      this.store.getOdGt(historyGtQueryParam);
+      this.store.getOdPred(historyPredQueryParam);
+    })
+  }
 
   render() {
     return (
@@ -249,33 +320,21 @@ class Odpred extends Component {
             <PageHeader
               ghost={false}
               onBack={() => window.history.back()}
-              title="起止需求预测可视化"
+              title="起止需求预测模型对比"
               // subTitle="交通拥堵"
               extra={[
                 //https://ant.design/components/button-cn/
                 <Button
                   key="1"
                   type="primary"
-                  onClick={this.historyPredict_online} //TODO: 修改回调函数
+                  onClick={this.historyPredict_online}
                   loading={this.store.loading} //添加 loading 属性即可让按钮处于加载状态
-                >需求数据分析</Button>,
-                <Button
-                  key="2"
-                  type="primary"
-                  onClick={throttle(this.realTimePredice, 1000)} //TODO: 修改回调函数
-                  loading={this.store.loading}
                 >预测模型对比</Button>,
               ]}
             />
           </Col>
         </Row>
 
-
-
-        {/*
-          1)第二行维护两个组件，Slider与Descriptions
-          2)点击加载历史数据对比后出现
-        */}
         <Row align={"middle"} justify={"center"} gutter={[24, 4]}>
           <Col span={12} >
             <Slider
@@ -298,18 +357,58 @@ class Odpred extends Component {
               // title="预测算法信息"
               layout="vertical"
               bordered={true}
-              column={3}
+              column={4}
               size="small"
               style={{ display: this.state.sliderDisplay }}
             >
               <Descriptions.Item
-                label="算法模型"
+                label="站点选择"
               >
-                {/* {this.state.predictType} */}
+                <Select
+                  defaultValue="老山公交场站"
+                  style={{ width: '100%', display: this.state.sliderDisplay }}
+                  onChange={this.selectStationOnChange_online}
+                  loading={this.store.loading}
+                  disabled={this.store.loading}
+                >
+                  <Option value="四惠枢纽站">四惠枢纽站</Option>
+                  <Option value="八王坟西">八王坟西</Option>
+                  <Option value="郎家园">郎家园</Option>
+                  <Option value="大北窑东">大北窑东</Option>
+                  <Option value="大北窑西">大北窑西</Option>
+                  <Option value="永安里路口西">永安里路口西</Option>
+                  <Option value="日坛路">日坛路</Option>
+                  <Option value="北京站口东">北京站口东</Option>
+                  <Option value="东单路口西">东单路口西</Option>
+                  <Option value="天安门东">天安门东</Option>
+                  <Option value="天安门西">天安门西</Option>
+                  <Option value="西单路口东">西单路口东</Option>
+                  <Option value="复兴门内">复兴门内</Option>
+                  <Option value="南礼士路">南礼士路</Option>
+                  <Option value="工会大楼">工会大楼</Option>
+                  <Option value="木樨地西">木樨地西</Option>
+                  <Option value="军事博物馆">军事博物馆</Option>
+                  <Option value="公主坟">公主坟</Option>
+                  <Option value="翠微路口">翠微路口</Option>
+                  <Option value="万寿路口西">万寿路口西</Option>
+                  <Option value="东翠路口">东翠路口</Option>
+                  <Option value="沙沟路口西">沙沟路口西</Option>
+                  <Option value="五棵松桥东">五棵松桥东</Option>
+                  <Option value="永定路口东">永定路口东</Option>
+                  <Option value="玉泉路口西">玉泉路口西</Option>
+                  <Option value="地铁八宝山站">地铁八宝山站</Option>
+                  <Option value="老山南路东口">老山南路东口</Option>
+                  <Option value="老山公交场站">老山公交场站</Option>
+                </Select>
+              </Descriptions.Item>
+
+              <Descriptions.Item
+                label="模型选择"
+              >
                 <Select
                   defaultValue="FFN"
                   style={{ width: '100%', display: this.state.sliderDisplay }}
-                  onChange={this.selectOnChange_online}
+                  onChange={this.selectModelOnChange_online}
                   loading={this.store.loading}
                   disabled={this.store.loading}
                 >
@@ -336,6 +435,7 @@ class Odpred extends Component {
               >
                 {this.store.scoreMAE}
               </Descriptions.Item>
+
               <Descriptions.Item
                 label={
                   <Popover content={
@@ -353,38 +453,40 @@ class Odpred extends Component {
           </Col>
         </Row>
 
-
-
-        {/*
-          1）第三行维护两个组件，heatmap(左)与heatmap(右)
-          2）视觉上看到的两个地图出现在第二行，但实际上属于第三行
-        */}
         <Row gutter={[16, 4]}>
-          <Col span={12} className="heatMapContainer">
-            <EchartHeatMapVis
-              heatMapContainerID="heatMapContainerLeft"
-              titleText={this.state.titleTextLeft}
+          <Col span={12} className="bar3DContainer">
+          <Bar3D
+              chartsBar3DID="pointBar3DGtInfo"
+              titleText={this.state.pointBar3DGtTitle}
               data={this.store.dataLeft}
               asyncParam={this.asyncMapParam}
             />
           </Col>
-          {
-            /**
-             * 上下两个组件是同种类型的组件，区别在于ID、标题与数据不同
-             */
-          }
-          <Col span={12} className="heatMapContainer">
-            <EchartHeatMapVis
-              heatMapContainerID="heatMapContainerRight"
-              titleText={this.state.titleTextRight}
+          <Col span={12} className="bar3DContainer">
+            <Bar3D
+              chartsBar3DID="pointBar3DPredInfo"
+              titleText={this.state.pointBar3DPredTitle}
               data={this.store.dataRight}
               asyncParam={this.asyncMapParam}
             />
           </Col>
         </Row>
+
+        <Row gutter={[16, 4]}>
+          <Col span={24} className='barContainer'>
+            <Bar
+              chartsBarID="pointBarInfo"
+              titleText={this.state.pointBarTitle}
+              data={{'gt':this.store.dataLeft,'pred':this.store.dataRight}}
+              asyncParam={this.asyncMapParam}
+              compare={true}
+              />
+          </Col>
+        </Row>
+
       </div>
     );
   }
 }
 
-export default Odpred;
+export default OdPred;

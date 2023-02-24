@@ -90,7 +90,6 @@ class Line extends Component {
           // margin: 20,
           textStyle: {
             color: '#737373',
-
           },
         },
         axisTick: {

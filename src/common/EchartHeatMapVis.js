@@ -97,8 +97,8 @@ class EchartHeatMapVis extends Component {
         // position: 'top'
       },
       grid: {
-        left: '20%',
-        right: '20%'
+        left: '10%',
+        right: '10%'
       },
       xAxis: {
         type: 'category',
@@ -119,8 +119,9 @@ class EchartHeatMapVis extends Component {
         calculable: true,
         realtime: false,
         // orient: 'vertical',
-        left: 'right',
-        top: 'center',
+        // left: 'right',
+        right: 0,
+        top: 'top',
         handleIcon: 'path://M0,0 v9.7h5 v-9.7h-5 Z',
         // handleSize: '140%',
         pieces: [

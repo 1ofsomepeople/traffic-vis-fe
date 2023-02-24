@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 
 
 import './home.css';
-import MapBoxPointsVis from '../../common/MapBoxPointsVis'
-import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
+// import MapBoxPointsVis from '../../common/MapBoxPointsVis'
+// import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 
 
 class Home extends Component {

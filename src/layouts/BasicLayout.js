@@ -19,7 +19,8 @@ import './BasicLayout.css';
 import Home from '../pages/home/Home';
 import Analysis from '../pages/analysis/Analysis';
 import PredictionAnalysis from '../pages/prediction/PredictionAnalysis';
-import Odpred from '../pages/od/Odpred';
+import OdPred from '../pages/od/OdPred';
+import Odtest from '../pages/test/test';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -38,6 +39,10 @@ const breadcrumbMap = {
   '/od': {
     icon: <BlockOutlined />,
     name: 'OdPred',
+  },
+  '/test': {
+    icon: <BlockOutlined />,
+    name: 'test',
   },
   '/team': {
     icon: <TeamOutlined />,
@@ -69,7 +74,12 @@ const routes = [
   {
     path: "/od",
     exact: true,
-    component: Odpred
+    component: OdPred
+  },
+  {
+    path: "/test",
+    exact: true,
+    component: Odtest
   },
 ]
 
@@ -128,7 +138,7 @@ class BasicLayout extends Component {
           // collapsible
           // collapsed={this.state.collapsed}
           // onCollapse={this.onCollapse}
-          width={150}
+          width={220}
           style={{
             overflow: 'auto',
             height: '100vh',
@@ -144,13 +154,17 @@ class BasicLayout extends Component {
               <Link to="/">首页</Link>
             </Menu.Item> */}
             <Menu.Item key="2" icon={<BorderOutlined />}>
-              <Link to="/analysis">可视分析</Link>
+              <Link to="/analysis">交通拥堵可视分析</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<BlockOutlined />}>
-              <Link to="/prediction">预测分析</Link>
+              <Link to="/prediction">交通拥堵预测分析</Link>
             </Menu.Item>
+            {/* 添加自定义界面 */}
             <Menu.Item key="4" icon={<BlockOutlined />}>
-              <Link to="/od">起止需求分析</Link>
+              <Link to="/test">起止需求可视分析</Link>
+            </Menu.Item>
+            <Menu.Item key="5" icon={<BlockOutlined />}>
+              <Link to="/od">起止需求预测分析</Link>
             </Menu.Item>
             {/* <Menu.Item key="4" icon={<TeamOutlined />}>
               <Link to="/team">团队介绍</Link>
@@ -164,7 +178,7 @@ class BasicLayout extends Component {
             {/* <Menu.Item key="9" icon={<FileOutlined />} >others</Menu.Item> */}
           </Menu>
         </Sider>
-        <Layout className="site-layout" style={{ marginLeft: 150 }}>
+        <Layout className="site-layout" style={{ marginLeft: 220 }}>
 
           <Header className="site-layout-background header-title" style={{ padding: 0 }} >
             交通数据可视化分析系统

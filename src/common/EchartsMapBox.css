@@ -1,0 +1,15 @@
+.navTitle {
+  text-align: center;
+  margin-bottom: 0px;
+
+  /* 文字颜色 */
+  color: #000;
+  /* 字体风格,'normal','italic','oblique' */
+  font-style: 'normal';
+  /* 字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400... */
+  font-weight: 800;
+  /* 字体系列 */
+  font-family: 'sans-serif';
+  /* 字体大小 */
+  font-size: 18px;
+}
