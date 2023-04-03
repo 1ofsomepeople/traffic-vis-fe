@@ -6,7 +6,7 @@ import { loadDataList, loadDataListNew, throttle } from '../../common/apis';
 // import EchartsMapBoxVis from '../../common/EchartsMapBoxVis';
 // import EchartHeatMapVis from '../../common/EchartHeatMapVis';
 import './OdPred.css';
-import Bar from '../../common/basicCharts/Bar';
+import BarO from '../../common/basicCharts/BarO';
 import Bar3D from '../../common/basicCharts/Bar3D';
 
 
@@ -70,14 +70,14 @@ class OdPred extends Component {
         '八王坟西' : 22,
         '四惠枢纽站' : 23
       },
-      pointBarTitle : '老山公交场站车站乘客分流图',
+      pointBarTitle : '老山公交场站车站乘客分流图（出发站视角）',
       pointBarDataGt : [],
       pointBarDataPred: [],
-      pointBar3DTitle : '乘客分流图',
+      pointBar3DTitle : '起止需求分布图（空间视角）',
       pointBar3DDataGt : [],
       pointBar3DDataPred: [],
-      pointBar3DPredTitle: '预测值',
-      pointBar3DGtTitle: '真实值',
+      pointBar3DPredTitle: '起止需求预测分布（空间视角）',
+      pointBar3DGtTitle: '起止需求真实分布（空间视角）',
 
     }
     this.DataGtNameList   = null // 真实数据的name list
@@ -96,8 +96,9 @@ class OdPred extends Component {
 
   componentDidMount() {
     window.onresize = () => {
-      echarts.init(document.getElementById("mapContainerLeft")).resize();
-      echarts.init(document.getElementById("mapContainerRight")).resize();
+      echarts.init(document.getElementById("pointBar3DGtInfo")).resize();
+      echarts.init(document.getElementById("pointBar3DPredInfo")).resize();
+      echarts.init(document.getElementById("pointBarInfo")).resize();
     };
   }
 
@@ -193,8 +194,33 @@ class OdPred extends Component {
   // 历史对比数据按钮 请求后端数据
   historyPredict_online() {
     let startTimeStr = "2016-06-29_08-00"
-    let endTimeStr = "2016-06-29_17-00"
-    this.DataGtNameList = loadDataListNew(startTimeStr, endTimeStr)
+    let endTimeStr = "2016-06-29_19-30"
+    this.DataGtNameList = [
+      '08:00',
+      '',
+      '09:00',
+      '',
+      '10:00',
+      '',
+      '11:00',
+      '',
+      '12:00',
+      '',
+      '13:00',
+      '',
+      '14:00',
+      '',
+      '15:00',
+      '',
+      '16:00',
+      '',
+      '17:00',
+      '',
+      '18:00',
+      '',
+      '19:00',
+      '',
+    ]
     let sliderMarks = {}
 
     for (let index = 0; index < this.DataGtNameList.length; index++) {
@@ -205,7 +231,7 @@ class OdPred extends Component {
           // color: '#1890ff',
           width: '120px'
         },
-        label: <span>{element.split('.')[0].split('_')[1].split('-').join(':')}</span>
+        label: <span>{element}</span>
       }
     }
 
@@ -294,7 +320,7 @@ class OdPred extends Component {
     this.setState({
       ...this.state,
       predStation: value,
-      pointBarTitle: value + '车站乘客分流图'
+      pointBarTitle: value + '车站乘客分流图（出发站视角）'
     }, () => {
       let historyGtQueryParam = {
         dataIndex: this.state.dataIndex,
@@ -320,7 +346,7 @@ class OdPred extends Component {
             <PageHeader
               ghost={false}
               onBack={() => window.history.back()}
-              title="起止需求预测模型对比"
+              title="起止需求预测"
               // subTitle="交通拥堵"
               extra={[
                 //https://ant.design/components/button-cn/
@@ -371,34 +397,34 @@ class OdPred extends Component {
                   loading={this.store.loading}
                   disabled={this.store.loading}
                 >
-                  <Option value="四惠枢纽站">四惠枢纽站</Option>
-                  <Option value="八王坟西">八王坟西</Option>
-                  <Option value="郎家园">郎家园</Option>
-                  <Option value="大北窑东">大北窑东</Option>
-                  <Option value="大北窑西">大北窑西</Option>
-                  <Option value="永安里路口西">永安里路口西</Option>
-                  <Option value="日坛路">日坛路</Option>
-                  <Option value="北京站口东">北京站口东</Option>
-                  <Option value="东单路口西">东单路口西</Option>
-                  <Option value="天安门东">天安门东</Option>
-                  <Option value="天安门西">天安门西</Option>
-                  <Option value="西单路口东">西单路口东</Option>
-                  <Option value="复兴门内">复兴门内</Option>
-                  <Option value="南礼士路">南礼士路</Option>
-                  <Option value="工会大楼">工会大楼</Option>
-                  <Option value="木樨地西">木樨地西</Option>
-                  <Option value="军事博物馆">军事博物馆</Option>
-                  <Option value="公主坟">公主坟</Option>
-                  <Option value="翠微路口">翠微路口</Option>
-                  <Option value="万寿路口西">万寿路口西</Option>
-                  <Option value="东翠路口">东翠路口</Option>
-                  <Option value="沙沟路口西">沙沟路口西</Option>
-                  <Option value="五棵松桥东">五棵松桥东</Option>
-                  <Option value="永定路口东">永定路口东</Option>
-                  <Option value="玉泉路口西">玉泉路口西</Option>
-                  <Option value="地铁八宝山站">地铁八宝山站</Option>
-                  <Option value="老山南路东口">老山南路东口</Option>
                   <Option value="老山公交场站">老山公交场站</Option>
+                  <Option value="老山南路东口">老山南路东口</Option>
+                  <Option value="地铁八宝山站">地铁八宝山站</Option>
+                  <Option value="玉泉路口西">玉泉路口西</Option>
+                  <Option value="永定路口东">永定路口东</Option>
+                  <Option value="五棵松桥东">五棵松桥东</Option>
+                  <Option value="沙沟路口西">沙沟路口西</Option>
+                  <Option value="东翠路口">东翠路口</Option>
+                  <Option value="万寿路口西">万寿路口西</Option>
+                  <Option value="翠微路口">翠微路口</Option>
+                  <Option value="公主坟">公主坟</Option>
+                  <Option value="军事博物馆">军事博物馆</Option>
+                  <Option value="木樨地西">木樨地西</Option>
+                  <Option value="工会大楼">工会大楼</Option>
+                  <Option value="南礼士路">南礼士路</Option>
+                  <Option value="复兴门内">复兴门内</Option>
+                  <Option value="西单路口东">西单路口东</Option>
+                  <Option value="天安门西">天安门西</Option>
+                  <Option value="天安门东">天安门东</Option>
+                  <Option value="东单路口西">东单路口西</Option>
+                  <Option value="北京站口东">北京站口东</Option>
+                  <Option value="日坛路">日坛路</Option>
+                  <Option value="永安里路口西">永安里路口西</Option>
+                  <Option value="大北窑西">大北窑西</Option>
+                  <Option value="大北窑东">大北窑东</Option>
+                  <Option value="郎家园">郎家园</Option>
+                  <Option value="八王坟西">八王坟西</Option>
+                  <Option value="四惠枢纽站">四惠枢纽站</Option>
                 </Select>
               </Descriptions.Item>
 
@@ -413,12 +439,12 @@ class OdPred extends Component {
                   disabled={this.store.loading}
                 >
                   <Option value="HA">HA</Option>
-                  <Option value="FFN">FFN</Option>
+                  <Option value="FFN">MLP</Option>
                   <Option value="LSTM">LSTM</Option>
                   <Option value="ConvLSTM">ConvLSTM</Option>
                   <Option value="DCRNN">DCRNN</Option>
-                  <Option value="GWNet">GWNet</Option>
-                  <Option value="GNN">GNN</Option>
+                  <Option value="GWNet">Graph WaveNet</Option>
+                  <Option value="GNN">GLNet</Option>
                 </Select>
               </Descriptions.Item>
 
@@ -453,7 +479,7 @@ class OdPred extends Component {
           </Col>
         </Row>
 
-        <Row gutter={[16, 4]}>
+        <Row gutter={[24, 4]}>
           <Col span={12} className="bar3DContainer">
           <Bar3D
               chartsBar3DID="pointBar3DGtInfo"
@@ -474,7 +500,7 @@ class OdPred extends Component {
 
         <Row gutter={[16, 4]}>
           <Col span={24} className='barContainer'>
-            <Bar
+            <BarO
               chartsBarID="pointBarInfo"
               titleText={this.state.pointBarTitle}
               data={{'gt':this.store.dataLeft,'pred':this.store.dataRight}}

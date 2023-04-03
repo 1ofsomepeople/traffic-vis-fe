@@ -61,15 +61,24 @@ class OdStore {
     //...
     else{
       let data = {
-        data1D: [],
+        data1D_o: [],
+        data1D_d: [],
         data3D: [],
+        data_map:[],
+        data_timeview_o:[],
+        data_timeview_d:[],
         datatime: ''
       }
       let resData = res.data
       // resData = processJsonData(resData)
-      data.data1D = resData.data1D
+      data.data1D_o = resData.data1D_o
+      data.data1D_d = resData.data1D_d
       data.data3D = resData.data3D
+      data.data_map = resData.data_map
+      data.data_timeview_o = resData.data_timeview_o
+      data.data_timeview_d = resData.data_timeview_d
       data.datatime = res.jsonName //NOTE: 预测时间设置
+      data.pred_station = res.pred_station
       this.dataLeft = data
       console.log(res)
     }
@@ -89,14 +98,18 @@ class OdStore {
     //...
     else{
       let data = {
-        data1D: [],
+        data1D_o: [],
+        data1D_d: [],
         data3D:[],
+        data_map:[],
         datatime: ''
       }
       let resData = res.data
       // resData = processJsonData(resData) //FIXME: 无需对数据做离散化处理
-      data.data1D = resData.data1D
+      data.data1D_o = resData.data1D_o
+      data.data1D_d = resData.data1D_d
       data.data3D = resData.data3D
+      data.data_map = resData.data_map
       data.datatime = res.jsonName
       this.dataRight = data
       this.scoreMAE = res.scoreMAE //TODO: 后端没有返回数据！

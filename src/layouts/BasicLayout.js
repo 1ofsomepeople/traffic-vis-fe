@@ -38,11 +38,11 @@ const breadcrumbMap = {
   },
   '/od': {
     icon: <BlockOutlined />,
-    name: 'OdPred',
+    name: 'Prediction',
   },
   '/test': {
     icon: <BlockOutlined />,
-    name: 'test',
+    name: 'Analysis',
   },
   '/team': {
     icon: <TeamOutlined />,
@@ -138,7 +138,7 @@ class BasicLayout extends Component {
           // collapsible
           // collapsed={this.state.collapsed}
           // onCollapse={this.onCollapse}
-          width={220}
+          width={300}
           style={{
             overflow: 'auto',
             height: '100vh',
@@ -153,12 +153,12 @@ class BasicLayout extends Component {
             {/* <Menu.Item key="1" icon={<HomeOutlined />}>
               <Link to="/">首页</Link>
             </Menu.Item> */}
-            <Menu.Item key="2" icon={<BorderOutlined />}>
+            {/* <Menu.Item key="2" icon={<BorderOutlined />}>
               <Link to="/analysis">交通拥堵可视分析</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<BlockOutlined />}>
               <Link to="/prediction">交通拥堵预测分析</Link>
-            </Menu.Item>
+            </Menu.Item> */}
             {/* 添加自定义界面 */}
             <Menu.Item key="4" icon={<BlockOutlined />}>
               <Link to="/test">起止需求可视分析</Link>
@@ -178,14 +178,14 @@ class BasicLayout extends Component {
             {/* <Menu.Item key="9" icon={<FileOutlined />} >others</Menu.Item> */}
           </Menu>
         </Sider>
-        <Layout className="site-layout" style={{ marginLeft: 220 }}>
+        <Layout className="site-layout" style={{ marginLeft: 300 }}>
 
           <Header className="site-layout-background header-title" style={{ padding: 0 }} >
-            交通数据可视化分析系统
+            出行起止需求可视化分析系统
           </Header>
 
-          <Content style={{ margin: '0 16px', overflow: 'initial' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
+          <Content style={{ margin: '0 32px', overflow: 'initial' }}>
+            <Breadcrumb style={{ margin: '4px 0' }}>
               {BreadcrumbItems}
             </Breadcrumb>
             <div id="site-layout-content" className="site-layout-background site-layout-content">
@@ -201,7 +201,7 @@ class BasicLayout extends Component {
           </Content>
 
           <Footer style={{ textAlign: 'center' }}>
-            Traffic Vis System ©2020 Created by STDAL
+            Travel rigin-Destination Demand Vis System ©2022 Created by STDAL
           </Footer>
 
         </Layout>

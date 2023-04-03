@@ -25,4 +25,7 @@
     height: '100vh';
     position: 'fixed';
     left: 0;
+    /* max-width: 850px !important;
+    min-width: 850px !important;
+    width: 850px !important; */
 }

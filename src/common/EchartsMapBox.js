@@ -39,13 +39,14 @@ class EchartsMapBox extends Component {
 
   componentDidMount() {
     // window.mapboxgl = mapboxgl;
-    this.showmapbox(this.props.data.data3D, this.props.data.datatime); //NOTE: 此处显示预测数据、时间
+    this.showmapbox(this.props.data.data_map, this.props.data.datatime); //NOTE: 此处显示预测数据、时间
     window.onresize = () => {
       this.myChartGl.resize()
     }
   }
   componentDidUpdate() {
-    let data = this.props.data.data
+    let data = this.props.data.data_map
+    // console.log('mapdata', this.props.data)
     let datatime = this.props.data.datatime
     let asyncParam = this.props.asyncParam ? this.props.chartsParam.mapParam : null
     let newOption = {
@@ -53,10 +54,10 @@ class EchartsMapBox extends Component {
         text: this.props.titleText,
         // subtext: datatime ? datatime : '', //子标题
       },
-      // series: [{
-      //   data: data ? data : [],
-      //   barSize: (2 ** (this.mapbox.getZoom() - 10) * 0.1),
-      // }],
+      series: [{
+        data: data ? data : [],
+        barSize: (2 ** (this.mapbox.getZoom() - 10) * 0.1),
+      }],
     }
     if (asyncParam) {
       newOption.mapbox3D = {
@@ -143,32 +144,32 @@ class EchartsMapBox extends Component {
           fontSize: 16//主题文字字体大小，默认为12px
         },
       },
-      // visualMap: {
-      //   type: 'piecewise', //分段型
-      //   categories: ['较多', '中等', '较少'],
+      visualMap: {
+        type: 'piecewise', //分段型
+        // categories: ['较多', '中等', '较少'],
 
-      //   // visualMap-continuous组件配置
-      //   show: true, //是否显示 visualMap-continuous 组件。如果设置为 false，不会显示，但是数据映射的功能还存在。
-      //   calculable: true, //是否显示拖拽用的手柄（手柄能拖拽调整选中范围）
-      //   realtime: true, //拖拽时，是否实时更新。
-      //   hoverLink: true,
-      //   left: 10,
-      //   bottom: 40,
-      //   dimension: 2, //指定用数据的『哪个维度』，映射到视觉元素上,默认取 data 中最后一个维度。
-      //   color: ['red', '#eac736', 'green'],
-      //   // pieces: [
-      //   //   { lte:5, label: '较少', color: '#369674' }, // 表示value等于150的情况。
-      //   //   { gt:5, lte:20, label: '中等', color: '#feb64d' },
-      //   //   { gt: 20, label: '较多', color: 'red' },
-      //   // ],
-      //   pieces: [
-      //     { value: 5, label: '较少', color: '#369674' }, // 表示value等于150的情况。
-      //     { value: 15, label: '中等', color: '#feb64d' },
-      //     { value: 20, label: '较多', color: 'red' },
-      //   ],
-      //   // min: 100,
-      //   // max: 500,
-      // },
+        // visualMap-continuous组件配置
+        show: true, //是否显示 visualMap-continuous 组件。如果设置为 false，不会显示，但是数据映射的功能还存在。
+        calculable: true, //是否显示拖拽用的手柄（手柄能拖拽调整选中范围）
+        realtime: true, //拖拽时，是否实时更新。
+        hoverLink: true,
+        left: 10,
+        bottom: 40,
+        dimension: 2, //指定用数据的『哪个维度』，映射到视觉元素上,默认取 data 中最后一个维度。
+        color: ['red', '#eac736', 'green'],
+        pieces: [
+          { lte:150, label: '较少', color: '#369674' }, // 表示value等于150的情况。
+          { gt:150, lte:600, label: '中等', color: '#feb64d' },
+          { gt: 600, label: '较多', color: 'red' },
+        ],
+        // pieces: [
+        //   { value: 5, label: '较少', color: '#369674' }, // 表示value等于150的情况。
+        //   { value: 15, label: '中等', color: '#feb64d' },
+        //   { value: 20, label: '较多', color: 'red' },
+        // ],
+        min: 100,
+        max: 500,
+      },
 
       mapbox3D: this.state.mapParam ? this.state.mapParam : {
         // echarts-gl中mapbox只能应用部分配置，更多的mapbox配置要使用mapbox的api
@@ -184,17 +185,17 @@ class EchartsMapBox extends Component {
         bearing: -30,
       },
 
-      // series: [{
-      //   type: 'bar3D',
-      //   coordinateSystem: 'mapbox3D',
-      //   data: data ? data : [],
-      //   shading: 'color',
-      //   minHeight: 100,
-      //   maxHeight: 500,
-      //   barSize: 0.1,
-      //   // 图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。
-      //   silent: true, //设置为true 大大优化响应时间
-      // }],
+      series: [{
+        type: 'bar3D',
+        coordinateSystem: 'mapbox3D',
+        data: data ? data : [],
+        shading: 'color',
+        minHeight: 100,
+        maxHeight: 500,
+        barSize: 1,
+        // 图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。
+        silent: true, //设置为true 大大优化响应时间
+      }],
 
     });
 
@@ -269,7 +270,7 @@ class EchartsMapBox extends Component {
           {/* <Title level={1}>Ant Design 4.0</Title> */}
           <p className="navTitle">地图样式</p>
           <Select
-            defaultValue="streets"
+            defaultValue="light"
             style={{
               width: '100px',
             }}
@@ -286,7 +287,7 @@ class EchartsMapBox extends Component {
         <div
           id={this.props.mapContainerID}
           className="mapBoxContainer"
-          style={{ minHeight: "500px", height: "100%", width: "100%" }}
+          style={{ minHeight: "400px", height: "100%", width: "100%" }}
         />
       </>
     );

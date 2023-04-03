@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import echarts from 'echarts';
 import 'echarts-gl';
 
-class Bar3D extends Component {
+class Bar3DTimeViewD extends Component {
   constructor(props) {
     super(props);
     this.state = {}
@@ -21,28 +21,12 @@ class Bar3D extends Component {
           type: 'cross'
         }
       },
-      // color:['#4472C5','#ED7C30','#80FF80'],
       legend: {
-        data: ['出发站', '到达站', '需求数量'],
-        // data: [
-        //   { name:'出发站',itemStyle: {color: '#000000'} },
-        //   { name:'到达站',itemStyle: {color: '#000000'} },
-        //   { name:'需求数量',itemStyle: {color: '#000000'} }
-        // ]
-        // textStyle:{
-        //   color:'#00eeff',  // 图例文字的颜色
-        // },
+        data: ['出发站', '时间', '需求数量']
       },
       title: {
         text: this.props.titleText,
-        // textStyle: {
-        //   color: "#000", //标签文字颜色改为白色
-        // },
-        subtext: this.props.data.datatime ? this.props.data.datatime : '',
-        // subtextStyle:{
-        //   color:'#000',
-        //   fontStyle:'normal',
-        // },
+        subtext: this.props.data.pred_station ? this.props.data.pred_station : '',
         left: 'top' // title 组件离容器左侧的距离。
       },
       backgroundColor: '#000',
@@ -99,20 +83,14 @@ class Bar3D extends Component {
       },
       xAxis3D: {
         type: 'category',
-        name: '出发站',
-        // axisLabel: {
-        //   show: true,
-        //    textStyle: {
-        //      color: '#000',  //更改坐标轴文字颜色
-        //      fontSize : 14      //更改坐标轴文字大小
-        //    }
-        // },
+        name: '出发站'
       },
       yAxis3D: {
         type: 'category',
-        name: '到达站'
+        name: '时间'
       },
       zAxis3D: {
+        show:false,
         type: 'value',
         name: '需求数量',
         max: 50,
@@ -143,11 +121,11 @@ class Bar3D extends Component {
           name: 'OD Demand',
           dimensions:[
             '出发站',
-            '到达站',
+            '时间',
             '需求数量',
           ],
           type: 'bar3D',
-          data: this.props.data.data3D,
+          data: this.props.data.data_timeview_d,
           shading: 'lambert',
           label: {
             formatter: function (param) {
@@ -193,4 +171,4 @@ class Bar3D extends Component {
   }
 }
 
-export default Bar3D;
+export default Bar3DTimeViewD;

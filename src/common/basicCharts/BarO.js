@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import echarts from 'echarts';
 import 'echarts-gl';
 
-class Bar extends Component {
+class BarO extends Component {
   constructor(props) {
     super(props);
     this.state = {}
@@ -48,6 +48,9 @@ class Bar extends Component {
               global: false
             }
           },
+          label:{
+            precision:1,
+          }
         },
       },
       grid: {
@@ -55,7 +58,15 @@ class Bar extends Component {
         left: '5%',
         right: '5%',
         bottom: '10%',
-        containLabel: true
+        containLabel: true,
+        // tooltip:{
+        //   axisPointer:{
+        //     label:{
+        //       show:true,
+        //       precision:1
+        //     }
+        //   }
+        // }
       },
       xAxis: [{
         type: 'category',
@@ -120,10 +131,13 @@ class Bar extends Component {
         },
         axisLabel: {
           show: true,
-          // margin: 20,
-          textStyle: {
-            color: '#737373',
-          },
+          // // margin: 20,
+          // textStyle: {
+          //   color: '#737373',
+          // },
+          formatter:function(value, index){
+            return value.toFixed(0);
+        }
         },
         // axisTick: {
         //   show: false,
@@ -143,7 +157,7 @@ class Bar extends Component {
       //     tooltip: {
       //       show: true
       //     },
-      //     data: this.props.data.gt.data1D, // 折线图数据数组
+      //     data: this.props.data.gt.data1D_o, // 折线图数据数组
       //     // data: [1,2,3,4,5,6,7,6,5,4,3,2,1,2,3,4,5,6,7,6,5,4,3,2,1,2,3,4,5,6,7], // 折线图数据数组
       //   },
       //   {
@@ -152,12 +166,13 @@ class Bar extends Component {
       //     tooltip: {
       //       show: true
       //     },
-      //     data: this.props.data.pred.data1D, // 折线图数据数组
+      //     data: this.props.data.pred.data1D_o, // 折线图数据数组
       //   }
       // ]
     };
     if (this.props.compare) {
       testOption.legend.data = ['真实值', '预测值']
+      testOption.legend.left = 'right'
       testOption.series = [
         {
           name: '真实值',
@@ -166,7 +181,7 @@ class Bar extends Component {
           tooltip: {
             show: true
           },
-          data: this.props.data.gt.data1D, // 折线图数据数组
+          data: this.props.data.gt.data1D_o, // 折线图数据数组
           // data: [1,2,3,4,5,6,7,6,5,4,3,2,1,2,3,4,5,6,7,6,5,4,3,2,1,2,3,4,5,6,7], // 折线图数据数组
           label: {
             show: true,
@@ -179,7 +194,8 @@ class Bar extends Component {
           tooltip: {
             show: true
           },
-          data: this.props.data.pred.data1D, // 折线图数据数组
+          // data: [0.1,2,3,4,5,6,7,6,5,4,3,2,1,2,3,4,5,6,7,6,5,4,3,2,1,2,3,4,5,6,7], // 折线图数据数组
+          data: this.props.data.pred.data1D_o, // 折线图数据数组
           label:{
             show: true,
             formatter: function(param){
@@ -191,6 +207,7 @@ class Bar extends Component {
     }
     else {
       testOption.legend.data = ['真实值']
+      testOption.legend.left = 'right'
       testOption.series = [
         {
           name: '真实值',
@@ -199,7 +216,7 @@ class Bar extends Component {
           tooltip: {
             show: true
           },
-          data: this.props.data.gt.data1D, // 折线图数据数组
+          data: this.props.data.gt.data1D_o, // 折线图数据数组
           // data: [1,2,3,4,5,6,7,6,5,4,3,2,1,2,3,4,5,6,7,6,5,4,3,2,1,2,3,4,5,6,7], // 折线图数据数组
           label: {
             show: true,
@@ -218,7 +235,7 @@ class Bar extends Component {
   }
 
   componentDidUpdate() {
-    console.log(this.props.data.data1D)
+    console.log(this.props.data.pred.data1D_o)
     this.updateBar()
   }
 
@@ -232,7 +249,7 @@ class Bar extends Component {
       <div
         id={this.props.chartsBarID}
         style={{
-          minHeight: "300px",
+          minHeight: "400px",
           height: "100%",
           width: "100%",
           padding:"5px" ,
@@ -241,4 +258,4 @@ class Bar extends Component {
   }
 }
 
-export default Bar;
+export default BarO;

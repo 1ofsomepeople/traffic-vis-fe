@@ -6,8 +6,11 @@ import { loadDataList, loadDataListNew, throttle } from '../../common/apis';
 import EchartsMapBox from '../../common/EchartsMapBox';
 import './test.css';
 import mapboxgl from 'mapbox-gl';
-import Bar from '../../common/basicCharts/Bar';
+import BarO from '../../common/basicCharts/BarO';
 import Bar3D from '../../common/basicCharts/Bar3D';
+import Bar3DTimeViewO from '../../common/basicCharts/Bar3DTimeViewO';
+import Bar3DTimeViewD from '../../common/basicCharts/Bar3DTimeViewD';
+import BarD from '../../common/basicCharts/BarD';
 
 
 const { Option } = Select;
@@ -31,18 +34,18 @@ class Odtest extends Component {
         data: [],
         datatime: ''
       },
-      titleTextLeft: '',
-      titleTextRight: '',
+      titleTextLeft: '北京1路公交',
+      titleTextRight: '起止需求分布',
       mapParam: {
         // Mapbox 地图样式 style
-        style: 'mapbox://styles/mapbox/outdoors-v11',
+        style: 'mapbox://styles/mapbox/light-v9',
         center: [116.368608, 39.901744],
         // Mapbox 地图的缩放等级
-        zoom: 10,
+        zoom: 11,
         // 视角俯视的倾斜角度,默认为0，也就是正对着地图。最大60。
-        pitch: 0,
+        pitch: 60,
         // Mapbox 地图的旋转角度
-        bearing: 0,
+        bearing: -60,
       },
       marks: {},
       sliderDisplay: 'none', //此状态为Slider的display的取值
@@ -81,10 +84,13 @@ class Odtest extends Component {
         '八王坟西' : 22,
         '四惠枢纽站' : 23
       },
-      pointBarTitle : '老山公交场站车站乘客分流图',
+      pointBarOTitle : '老山公交场站车站乘客分流图（出发站视角）',
+      pointBarDTitle : '老山公交场站车站乘客分流图（到达站视角）',
       pointBarDataGt : [],
       pointBarDataPred: [],
-      pointBar3DTitle : '乘客分流图',
+      pointBar3DTitle : '起止需求分布图（空间视角）',
+      pointBar3DTimeViewOTitle : '起止需求分布图（时间-出发站视角）',
+      pointBar3DTimeViewDTitle : '起止需求分布图（时间-到达站视角）',
       pointBar3DDataGt : [],
       pointBar3DDataPred: [],
     }
@@ -111,7 +117,10 @@ class Odtest extends Component {
     this.echartsMapContainer = echarts.init(document.getElementById("mapContainerLeft"))
     this.echartsMapContainer.resize();
     echarts.init(document.getElementById("pointBar3DInfo")).resize();
-    echarts.init(document.getElementById("pointBarInfo")).resize();
+    echarts.init(document.getElementById("pointBar3DTimeViewOInfo")).resize();
+    echarts.init(document.getElementById("pointBar3DTimeViewDInfo")).resize();
+    echarts.init(document.getElementById("pointBarOInfo")).resize();
+    echarts.init(document.getElementById("pointBarDInfo")).resize();
   }
 
   componentDidMount() {
@@ -143,6 +152,7 @@ class Odtest extends Component {
     if (this.mapbox.getLayer('points')) {
       this.mapbox.removeLayer('points')
       this.mapbox.removeSource('points')
+      return
     }
     // poi点坐标信息
     let stationgeojson = {
@@ -466,7 +476,7 @@ class Odtest extends Component {
     //loadImage(url,callback)
     //url(string)图像的 URL。图像的格式必须为 png， webp 或者 jpg 。
     //callback(Function)形式为 callback(error, data) 。 当图像成功载入或出现错误异常时调用。
-    this.mapbox.loadImage('./icons/marker.png', (error, image) => {
+    this.mapbox.loadImage('./icons/flag.png', (error, image) => {
       if (error) throw error;
       this.mapbox.addImage('pointMark', image);
     });
@@ -517,8 +527,33 @@ class Odtest extends Component {
   // 历史对比数据按钮 请求后端数据
   historyPredict_online() {
     let startTimeStr = "2016-06-29_08-00"
-    let endTimeStr = "2016-06-29_17-00"
-    this.DataGtNameList = loadDataListNew(startTimeStr, endTimeStr)
+    let endTimeStr = "2016-06-29_19-30"
+    this.DataGtNameList = [
+      '08:00',
+      '',
+      '09:00',
+      '',
+      '10:00',
+      '',
+      '11:00',
+      '',
+      '12:00',
+      '',
+      '13:00',
+      '',
+      '14:00',
+      '',
+      '15:00',
+      '',
+      '16:00',
+      '',
+      '17:00',
+      '',
+      '18:00',
+      '',
+      '19:00',
+      '',
+    ]
     let sliderMarks = {}
 
     for (let index = 0; index < this.DataGtNameList.length; index++) {
@@ -529,7 +564,7 @@ class Odtest extends Component {
           // color: '#1890ff',
           width: '120px'
         },
-        label: <span>{element.split('.')[0].split('_')[1].split('-').join(':')}</span>
+        label: <span>{element}</span>
       }
     }
 
@@ -537,7 +572,7 @@ class Odtest extends Component {
       ...this.state,
       marks: sliderMarks,
       sliderDisplay: 'block',
-      titleTextLeft: "1路公交车站分布",
+      titleTextLeft: "老山公交场站乘客分流图（出发站视角）",
       titleTextRight: "预测数据 FFN模型",
       dataIndex: 0, // history数据的index值
       predictType: 'FFN', // history预测数据的预测模型类型
@@ -608,7 +643,9 @@ class Odtest extends Component {
     this.setState({
       ...this.state,
       predStation: value,
-      pointBarTitle: value + '车站乘客分流图'
+      titleTextLeft: value + '车站乘客分流图（出发站视角）',
+      pointBarOTitle: value + '车站乘客分流图（出发站视角）',
+      pointBarDTitle: value + '车站乘客分流图（到达站视角）'
     }, () => {
       // this.resizeAllCharts()
       let historyGtQueryParam = {
@@ -629,7 +666,7 @@ class Odtest extends Component {
             <PageHeader
               ghost={false}
               onBack={() => window.history.back()}
-              title="起止需求预测可视化"
+              title="起止需求可视化"
               // subTitle="交通拥堵"
               extra={[
                 //https://ant.design/components/button-cn/
@@ -644,7 +681,7 @@ class Odtest extends Component {
                   type="primary"
                   onClick={this.showStation}
                   loading={this.store.loading}
-                >车站位置展示</Button>,
+                >车站位置显示</Button>,
               ]}
             />
           </Col>
@@ -690,34 +727,34 @@ class Odtest extends Component {
                   loading={this.store.loading}
                   disabled={this.store.loading}
                 >
-                  <Option value="四惠枢纽站">四惠枢纽站</Option>
-                  <Option value="八王坟西">八王坟西</Option>
-                  <Option value="郎家园">郎家园</Option>
-                  <Option value="大北窑东">大北窑东</Option>
-                  <Option value="大北窑西">大北窑西</Option>
-                  <Option value="永安里路口西">永安里路口西</Option>
-                  <Option value="日坛路">日坛路</Option>
-                  <Option value="北京站口东">北京站口东</Option>
-                  <Option value="东单路口西">东单路口西</Option>
-                  <Option value="天安门东">天安门东</Option>
-                  <Option value="天安门西">天安门西</Option>
-                  <Option value="西单路口东">西单路口东</Option>
-                  <Option value="复兴门内">复兴门内</Option>
-                  <Option value="南礼士路">南礼士路</Option>
-                  <Option value="工会大楼">工会大楼</Option>
-                  <Option value="木樨地西">木樨地西</Option>
-                  <Option value="军事博物馆">军事博物馆</Option>
-                  <Option value="公主坟">公主坟</Option>
-                  <Option value="翠微路口">翠微路口</Option>
-                  <Option value="万寿路口西">万寿路口西</Option>
-                  <Option value="东翠路口">东翠路口</Option>
-                  <Option value="沙沟路口西">沙沟路口西</Option>
-                  <Option value="五棵松桥东">五棵松桥东</Option>
-                  <Option value="永定路口东">永定路口东</Option>
-                  <Option value="玉泉路口西">玉泉路口西</Option>
-                  <Option value="地铁八宝山站">地铁八宝山站</Option>
-                  <Option value="老山南路东口">老山南路东口</Option>
                   <Option value="老山公交场站">老山公交场站</Option>
+                  <Option value="老山南路东口">老山南路东口</Option>
+                  <Option value="地铁八宝山站">地铁八宝山站</Option>
+                  <Option value="玉泉路口西">玉泉路口西</Option>
+                  <Option value="永定路口东">永定路口东</Option>
+                  <Option value="五棵松桥东">五棵松桥东</Option>
+                  <Option value="沙沟路口西">沙沟路口西</Option>
+                  <Option value="东翠路口">东翠路口</Option>
+                  <Option value="万寿路口西">万寿路口西</Option>
+                  <Option value="翠微路口">翠微路口</Option>
+                  <Option value="公主坟">公主坟</Option>
+                  <Option value="军事博物馆">军事博物馆</Option>
+                  <Option value="木樨地西">木樨地西</Option>
+                  <Option value="工会大楼">工会大楼</Option>
+                  <Option value="南礼士路">南礼士路</Option>
+                  <Option value="复兴门内">复兴门内</Option>
+                  <Option value="西单路口东">西单路口东</Option>
+                  <Option value="天安门西">天安门西</Option>
+                  <Option value="天安门东">天安门东</Option>
+                  <Option value="东单路口西">东单路口西</Option>
+                  <Option value="北京站口东">北京站口东</Option>
+                  <Option value="日坛路">日坛路</Option>
+                  <Option value="永安里路口西">永安里路口西</Option>
+                  <Option value="大北窑西">大北窑西</Option>
+                  <Option value="大北窑东">大北窑东</Option>
+                  <Option value="郎家园">郎家园</Option>
+                  <Option value="八王坟西">八王坟西</Option>
+                  <Option value="四惠枢纽站">四惠枢纽站</Option>
                 </Select>
               </Descriptions.Item>
             </Descriptions>
@@ -746,14 +783,42 @@ class Odtest extends Component {
         </Row>
 
         <Row gutter={[16, 4]}>
-          <Col span={24} className='barContainer'>
-            <Bar
-              chartsBarID="pointBarInfo"
-              titleText={this.state.pointBarTitle}
+          <Col span={12} className='barContainer'>
+            <BarO
+              chartsBarID="pointBarOInfo"
+              titleText={this.state.pointBarOTitle}
               data={{'gt':this.store.dataLeft, 'pred':this.store.dataRight}}
               asyncParam={this.asyncMapParam}
               compare={false}
               />
+          </Col>
+          <Col span={12} className="bar3DContainer">
+            <Bar3DTimeViewO
+              chartsBar3DID="pointBar3DTimeViewOInfo"
+              titleText={this.state.pointBar3DTimeViewOTitle}
+              data={this.store.dataLeft}
+              asyncParam={this.asyncMapParam}
+            />
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 4]}>
+          <Col span={12} className='barContainer'>
+              <BarD
+                chartsBarID="pointBarDInfo"
+                titleText={this.state.pointBarDTitle}
+                data={{'gt':this.store.dataLeft, 'pred':this.store.dataRight}}
+                asyncParam={this.asyncMapParam}
+                compare={false}
+                />
+            </Col>
+          <Col span={12} className="bar3DContainer">
+            <Bar3DTimeViewD
+              chartsBar3DID="pointBar3DTimeViewDInfo"
+              titleText={this.state.pointBar3DTimeViewDTitle}
+              data={this.store.dataLeft}
+              asyncParam={this.asyncMapParam}
+            />
           </Col>
         </Row>
 
