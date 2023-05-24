@@ -125,7 +125,7 @@ class EchartsMapBox extends Component {
 
     mapboxgl.accessToken = 'pk.eyJ1IjoiaHVzdDEyIiwiYSI6ImNrM3BpbDhsYTAzbDgzY3J2OXBzdXFuNDMifQ.bDD9-o_SB4fR0UXzYLy9gg';
 
-    // echarts对象实例
+    // 将dom节点初始化为echarts对象实例
     this.myChartGl = echarts.init(document.getElementById(this.props.mapContainerID));
 
     // let zoomeLevel = 11

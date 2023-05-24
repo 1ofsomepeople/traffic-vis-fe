@@ -201,7 +201,7 @@ class BasicLayout extends Component {
           </Content>
 
           <Footer style={{ textAlign: 'center' }}>
-            Travel rigin-Destination Demand Vis System ©2022 Created by STDAL
+            Travel Origin-Destination Demand Vis System ©2022 Created by STDAL
           </Footer>
 
         </Layout>
